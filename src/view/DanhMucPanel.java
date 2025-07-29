@@ -68,7 +68,7 @@ public class DanhMucPanel extends JPanel {
             }
         });
 
-        btnFilter.addActionListener(e -> controller.filterDanhMuc(tfFilter.getText().trim()));
+        btnFilter.addActionListener(e -> controller.filterDanhMuc(tfID.getText().trim(), tfLoai.getText().trim(), tfSoLuong.getText().trim()));
 
         table.getSelectionModel().addListSelectionListener(e -> {
             int row = table.getSelectedRow();

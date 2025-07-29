@@ -31,33 +31,8 @@ public class ViTriDAO {
         return list;
     }
 
-    public List<ViTri> filter(String keyword) {
-        List<ViTri> list = new ArrayList<>();
-        String sql = "SELECT * FROM ViTri WHERE vi_tri = ?";
-
-        try (Connection conn = DBConnection.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql)) {
-            stmt.setString(1, keyword);
-            ResultSet rs = stmt.executeQuery();
-
-            while (rs.next()) {
-                list.add(new ViTri(
-                        rs.getString("vi_tri"),
-                        rs.getInt("so_nguoi"),
-                        rs.getString("dia_chi"),
-                        rs.getString("thanh_pho"),
-                        rs.getTimestamp("tao_luc"),
-                        rs.getTimestamp("cap_nhat_luc")
-                ));
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return list;
-    }
-
     public boolean insert(ViTri v) {
-        String sql = "INSERT INTO ViTri (vi_tri, so_nguoi, dia_chi, thanh_pho, tao_luc, cap_nhat_luc) VALUES (?, ?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO ViTri (vi_tri, so_nguoi, dia_chi, thanh_pho, tao_luc, cap_nhat_luc) VALUES (?, ?, ?, ?, NOW(), NOW())";
         try (Connection conn = DBConnection.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
 
@@ -65,8 +40,6 @@ public class ViTriDAO {
             ps.setInt(2, v.getSoNguoi());
             ps.setString(3, v.getDiaChi());
             ps.setString(4, v.getThanhPho());
-            ps.setTimestamp(5, new java.sql.Timestamp(v.getTaoLuc().getTime()));
-            ps.setTimestamp(6, new java.sql.Timestamp(v.getCapNhatLuc().getTime()));
 
             return ps.executeUpdate() > 0;
         } catch (Exception e) {

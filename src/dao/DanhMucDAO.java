@@ -30,23 +30,46 @@ public class DanhMucDAO {
         return list;
     }
 
-    public List<DanhMuc> filter(String keyword) {
+    public List<DanhMuc> filter(String danhMuc, String loai, String soLuong) {
         List<DanhMuc> list = new ArrayList<>();
-        String sql = "SELECT * FROM DanhMuc WHERE danh_muc = ?";
+        StringBuilder sql = new StringBuilder("SELECT * FROM DanhMuc WHERE 1=1");
+        List<Object> params = new ArrayList<>();
+
+        if (!danhMuc.isEmpty()) {
+            sql.append(" AND danh_muc = ?");
+            params.add(danhMuc);
+        }
+        if (!loai.isEmpty()) {
+            sql.append(" AND loai = ?");
+            params.add(loai);
+        }
+        if (!soLuong.isEmpty()) {
+            try {
+                int soluong = Integer.parseInt(soLuong);
+                sql.append(" AND so_luong = ?");
+                params.add(soluong);
+            } catch (NumberFormatException e) {
+                // skip
+            }
+        }
 
         try (Connection conn = DBConnection.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql)) {
-            stmt.setString(1, keyword);
-            ResultSet rs = stmt.executeQuery();
+             PreparedStatement ps = conn.prepareStatement(sql.toString())) {
 
-            while (rs.next()) {
+            for (int i = 0; i < params.size(); i++) {
+                ps.setObject(i + 1, params.get(i));
+            }
+
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
                 list.add(new DanhMuc(
                         rs.getString("danh_muc"),
                         rs.getString("loai"),
                         rs.getInt("so_luong"),
                         rs.getTimestamp("tao_luc"),
                         rs.getTimestamp("cap_nhat_luc")
-                ));
+                    ));
+                }
             }
         } catch (Exception e) {
             e.printStackTrace();

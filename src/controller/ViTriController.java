@@ -40,10 +40,10 @@ public class ViTriController {
         loadTableData();
     }
 
-    public void filterViTri(String keyword) {
+    public void filterViTri(String viTri, String thanhPho, String soNguoiStr) {
         var model = view.getTableModel();
         model.setRowCount(0);
-        for (ViTri v : dao.filter(keyword)) {
+        for (ViTri v : dao.filter(viTri, thanhPho, soNguoiStr)) {
             model.addRow(new Object[]{
                     v.getViTri(), v.getSoNguoi(), v.getDiaChi(), v.getThanhPho(),
                     v.getTaoLuc(), v.getCapNhatLuc()

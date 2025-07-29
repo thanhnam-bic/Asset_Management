@@ -38,10 +38,10 @@ public class DanhMucController {
         loadTableData();
     }
 
-    public void filterDanhMuc(String keyword) {
+    public void filterDanhMuc(String danhMuc, String loai, String soLuong) {
         var model = view.getTableModel();
         model.setRowCount(0);
-        for (DanhMuc dm : dao.filter(keyword)) {
+        for (DanhMuc dm : dao.filter(danhMuc, loai, soLuong)) {
             model.addRow(new Object[]{
                     dm.getDanhMuc(), dm.getLoai(), dm.getSoLuong(),
                     dm.getTaoLuc(), dm.getCapNhatLuc()

@@ -77,7 +77,7 @@ public class ViTriPanel extends JPanel {
         });
 
         btnFilter.addActionListener(e -> {
-            controller.filterViTri(tfFilter.getText().trim());
+            controller.filterViTri(tfViTri.getText().trim(), tfThanhPho.getText().trim(), tfSoNguoi.getText().trim());
         });
 
         btnUpdate.addActionListener(e -> {
