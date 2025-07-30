@@ -5,6 +5,7 @@ import controller.ViTriController;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
+import java.io.*;
 
 public class ViTriPanel extends JPanel {
     private JTable table;
@@ -12,7 +13,7 @@ public class ViTriPanel extends JPanel {
     private ViTriController controller;
     private JTextField tfViTri, tfSoNguoi, tfDiaChi, tfThanhPho, tfFilter;
     private JLabel lblTaoLuc, lblCapNhatLuc;
-    private JButton btnInsert, btnDelete, btnFilter, btnUpdate;
+    private JButton btnInsert, btnDelete, btnFilter, btnUpdate, btnExportCSV, btnImportCSV;
 
     public ViTriPanel() {
         controller = new ViTriController(this);
@@ -44,6 +45,8 @@ public class ViTriPanel extends JPanel {
         btnDelete = new JButton("Xoá");
         btnUpdate = new JButton("Cập nhật theo vị trí");
         btnFilter = new JButton("Lọc chính xác");
+        btnExportCSV = new JButton("Xuất CSV");
+        btnImportCSV = new JButton("Nhập CSV");
         
 
         inputPanel.add(new JLabel("Vị trí:")); inputPanel.add(tfViTri);
@@ -52,8 +55,12 @@ public class ViTriPanel extends JPanel {
         inputPanel.add(new JLabel("Thành phố:")); inputPanel.add(tfThanhPho);
         inputPanel.add(btnInsert); inputPanel.add(btnDelete);
         inputPanel.add(btnUpdate); inputPanel.add(btnFilter);
+        inputPanel.add(btnExportCSV); inputPanel.add(btnImportCSV);
 
         add(inputPanel, BorderLayout.SOUTH);
+        
+        btnExportCSV.addActionListener(e -> exportCSV());
+        btnImportCSV.addActionListener(e -> importCSV());
 
         btnInsert.addActionListener(e -> {
             try {
@@ -106,6 +113,60 @@ public class ViTriPanel extends JPanel {
                 lblCapNhatLuc.setText(table.getValueAt(selectedRow, 5).toString());
             }
         });
+    }
+    
+    private void exportCSV() {
+        JFileChooser fileChooser = new JFileChooser();
+        if (fileChooser.showSaveDialog(this) == JFileChooser.APPROVE_OPTION) {
+            try (PrintWriter writer = new PrintWriter(new FileWriter(fileChooser.getSelectedFile()))) {
+                for (int i = 0; i < tableModel.getColumnCount(); i++) {
+                    writer.print(tableModel.getColumnName(i));
+                    if (i < tableModel.getColumnCount() - 1) writer.print(",");
+                }
+                writer.println();
+                for (int i = 0; i < tableModel.getRowCount(); i++) {
+                    for (int j = 0; j < tableModel.getColumnCount(); j++) {
+                        writer.print(tableModel.getValueAt(i, j));
+                        if (j < tableModel.getColumnCount() - 1) writer.print(",");
+                    }
+                    writer.println();
+                }
+                JOptionPane.showMessageDialog(this, "Xuất CSV thành công!");
+            } catch (IOException e) {
+                JOptionPane.showMessageDialog(this, "Lỗi khi xuất file CSV: " + e.getMessage());
+            }
+        }
+    }
+
+    private void importCSV() {
+        JFileChooser fileChooser = new JFileChooser();
+        if (fileChooser.showOpenDialog(this) == JFileChooser.APPROVE_OPTION) {
+            File selectedFile = fileChooser.getSelectedFile();
+            try (BufferedReader reader = new BufferedReader(new FileReader(selectedFile))) {
+                String line = reader.readLine(); // Bỏ qua dòng tiêu đề
+
+                int count = 0;
+                while ((line = reader.readLine()) != null) {
+                    String[] parts = line.split(",");
+                    if (parts.length >= 4) {
+                        String viTri = parts[0].trim();
+                        int soNguoi = Integer.parseInt(parts[1].trim());
+                        String diaChi = parts[2].trim();
+                        String thanhPho = parts[3].trim();
+
+                        // Ghi vào cơ sở dữ liệu
+                        controller.insertViTri(viTri, soNguoi, diaChi, thanhPho);
+                        count++;
+                    }
+                }
+
+                // Tải lại dữ liệu bảng sau khi import xong
+                controller.loadTableData();
+                JOptionPane.showMessageDialog(this, "Nhập CSV thành công! Đã thêm " + count + " dòng.");
+            } catch (IOException | NumberFormatException ex) {
+                JOptionPane.showMessageDialog(this, "Lỗi khi nhập file CSV: " + ex.getMessage());
+            }
+        }
     }
 
     public JTable getTable() {

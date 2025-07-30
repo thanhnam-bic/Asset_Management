@@ -4,13 +4,14 @@ import controller.NhanVienController;
 
 import javax.swing.*;
 import java.awt.*;
+import java.io.*;
 import javax.swing.table.DefaultTableModel;
 
 public class NhanVienPanel extends JPanel {
     private JTable table;
     private DefaultTableModel tableModel;
     private JTextField tfMa, tfTen, tfHo, tfTenDN, tfViTri, tfEmail;
-    private JButton btnInsert, btnUpdate, btnDelete, btnFilter;
+    private JButton btnInsert, btnUpdate, btnDelete, btnFilter, btnExportCSV, btnImportCSV;
     private NhanVienController controller;
 
     public NhanVienPanel() {
@@ -22,11 +23,13 @@ public class NhanVienPanel extends JPanel {
     private void initComponents() {
         setLayout(new BorderLayout());
         tableModel = new DefaultTableModel();
-        tableModel.setColumnIdentifiers(new String[]{"Mã NV", "Tên", "Họ", "Tên đăng nhập", "Vị trí"});
+        tableModel.setColumnIdentifiers(new String[]{
+                "Mã NV", "Tên", "Họ", "Tên đăng nhập", "Vị trí", "Email"
+        });
         table = new JTable(tableModel);
         add(new JScrollPane(table), BorderLayout.CENTER);
 
-        JPanel panel = new JPanel(new GridLayout(8, 2));
+        JPanel panel = new JPanel(new GridLayout(9, 2));
         tfMa = new JTextField(); tfTen = new JTextField(); tfHo = new JTextField();
         tfTenDN = new JTextField(); tfViTri = new JTextField(); tfEmail = new JTextField();
 
@@ -34,6 +37,8 @@ public class NhanVienPanel extends JPanel {
         btnUpdate = new JButton("Cập nhật theo mã nhân viên");
         btnDelete = new JButton("Xoá");
         btnFilter = new JButton("Lọc chính xác");
+        btnExportCSV = new JButton("Xuất CSV");
+        btnImportCSV = new JButton("Nhập CSV");
 
         panel.add(new JLabel("Mã NV:")); panel.add(tfMa);
         panel.add(new JLabel("Tên:")); panel.add(tfTen);
@@ -43,9 +48,11 @@ public class NhanVienPanel extends JPanel {
         panel.add(new JLabel("Email:")); panel.add(tfEmail);
         panel.add(btnInsert); panel.add(btnDelete);
         panel.add(btnUpdate); panel.add(btnFilter);
+        panel.add(btnExportCSV); panel.add(btnImportCSV);
 
         add(panel, BorderLayout.SOUTH);
 
+        // === Event Listeners ===
         btnInsert.addActionListener(e -> controller.insertNhanVien(
                 tfMa.getText(), tfTen.getText(), tfHo.getText(),
                 tfTenDN.getText(), tfViTri.getText(), tfEmail.getText()
@@ -68,6 +75,9 @@ public class NhanVienPanel extends JPanel {
                 tfMa.getText().trim(), tfTen.getText().trim(), tfViTri.getText().trim(), tfHo.getText().trim(), tfEmail.getText().trim()
         ));
 
+        btnExportCSV.addActionListener(e -> exportCSV());
+        btnImportCSV.addActionListener(e -> importCSV());
+
         table.getSelectionModel().addListSelectionListener(e -> {
             int row = table.getSelectedRow();
             if (row >= 0) {
@@ -79,6 +89,59 @@ public class NhanVienPanel extends JPanel {
                 tfEmail.setText(table.getValueAt(row, 5).toString());
             }
         });
+    }
+
+    private void exportCSV() {
+        JFileChooser fileChooser = new JFileChooser();
+        if (fileChooser.showSaveDialog(this) == JFileChooser.APPROVE_OPTION) {
+            try (PrintWriter writer = new PrintWriter(new FileWriter(fileChooser.getSelectedFile()))) {
+                for (int i = 0; i < tableModel.getColumnCount(); i++) {
+                    writer.print(tableModel.getColumnName(i));
+                    if (i < tableModel.getColumnCount() - 1) writer.print(",");
+                }
+                writer.println();
+                for (int i = 0; i < tableModel.getRowCount(); i++) {
+                    for (int j = 0; j < tableModel.getColumnCount(); j++) {
+                        writer.print(tableModel.getValueAt(i, j));
+                        if (j < tableModel.getColumnCount() - 1) writer.print(",");
+                    }
+                    writer.println();
+                }
+                JOptionPane.showMessageDialog(this, "Xuất CSV thành công!");
+            } catch (IOException e) {
+                JOptionPane.showMessageDialog(this, "Lỗi khi xuất file CSV: " + e.getMessage());
+            }
+        }
+    }
+
+    private void importCSV() {
+        JFileChooser fileChooser = new JFileChooser();
+        if (fileChooser.showOpenDialog(this) == JFileChooser.APPROVE_OPTION) {
+            File selectedFile = fileChooser.getSelectedFile();
+            try (BufferedReader reader = new BufferedReader(new FileReader(selectedFile))) {
+                reader.readLine(); // bỏ dòng tiêu đề
+                int count = 0;
+                String line;
+                while ((line = reader.readLine()) != null) {
+                    String[] parts = line.split(",");
+                    if (parts.length >= 6) {
+                        String ma = parts[0].trim();
+                        String ten = parts[1].trim();
+                        String ho = parts[2].trim();
+                        String tenDN = parts[3].trim();
+                        String viTri = parts[4].trim();
+                        String email = parts[5].trim();
+
+                        controller.insertNhanVien(ma, ten, ho, tenDN, viTri, email);
+                        count++;
+                    }
+                }
+                controller.loadTableData();
+                JOptionPane.showMessageDialog(this, "Nhập CSV thành công! Đã thêm " + count + " dòng.");
+            } catch (IOException e) {
+                JOptionPane.showMessageDialog(this, "Lỗi khi nhập file CSV: " + e.getMessage());
+            }
+        }
     }
 
     public DefaultTableModel getTableModel() {
