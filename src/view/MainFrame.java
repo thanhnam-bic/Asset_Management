@@ -21,6 +21,20 @@ public class MainFrame extends JFrame {
         // Thêm panel cho bảng DanhMuc
         tabbedPane.addTab("Danh mục", new DanhMucPanel());
 
+        // Tạo thanh menu chứa nút "Đăng xuất"
+        JMenuBar menuBar = new JMenuBar();
+        JMenu heThongMenu = new JMenu("Hệ thống");
+        JMenuItem logoutItem = new JMenuItem("Đăng xuất");
+
+        logoutItem.addActionListener(e -> {
+            dispose(); // Đóng MainFrame
+            new LoginFrame().setVisible(true); // Quay lại màn hình đăng nhập
+        });
+
+        heThongMenu.add(logoutItem);
+        menuBar.add(heThongMenu);
+        setJMenuBar(menuBar); // Gắn thanh menu vào frame
+
         add(tabbedPane, BorderLayout.CENTER);
     }
 }
