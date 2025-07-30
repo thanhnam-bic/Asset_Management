@@ -16,7 +16,11 @@ Mật Khẩu: `admin123`
 
 Sau đó sẽ vào được những table quản lý tài sản
 
-<img width="900" height="599" alt="Screenshot 2025-07-30 at 08 46 06" src="https://github.com/user-attachments/assets/5f4de821-5f33-4605-a5c4-b7de21b174ff" />
+<img width="900" height="599" alt="Screenshot 2025-07-30 at 09 06 56" src="https://github.com/user-attachments/assets/9f1abec6-570b-4926-a47b-6b573154f1ee" />
+
+Đăng xuất:
+
+<img width="902" height="601" alt="Screenshot 2025-07-30 at 09 07 08" src="https://github.com/user-attachments/assets/248df9de-d70e-4834-ae6f-66d301dd12d3" />
 
 
 ## Link DB Diagram
