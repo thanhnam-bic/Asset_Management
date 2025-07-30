@@ -1,7 +1,7 @@
 package view;
 
-import javax.swing.*;
 import java.awt.*;
+import javax.swing.*;
 
 public class MainFrame extends JFrame {
     public MainFrame() {
@@ -21,7 +21,7 @@ public class MainFrame extends JFrame {
         // Thêm panel cho bảng DanhMuc
         tabbedPane.addTab("Danh mục", new DanhMucPanel());
 
-        // Tạo thanh menu đẹp
+        // Tạo thanh menu
         JMenuBar menuBar = new JMenuBar();
         JMenu heThongMenu = new JMenu("⚙ Hệ thống");
         heThongMenu.setFont(new Font("Segoe UI", Font.BOLD, 14));
