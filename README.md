@@ -21,7 +21,8 @@ Sau đó sẽ vào được những table quản lý tài sản
 <img width="901" height="602" alt="Screenshot 2025-07-30 at 14 54 16" src="https://github.com/user-attachments/assets/3d895ac8-fead-4b56-9e45-01fd6f160c31" />
 
 ## Chức năng chính:
-
++ Đăng Nhập
++ Đăng Xuất
 + Thêm
 + Sửa
 + Xoá
