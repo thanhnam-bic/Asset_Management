@@ -20,6 +20,12 @@ Sau đó sẽ vào được những table quản lý tài sản
 
 <img width="901" height="602" alt="Screenshot 2025-07-30 at 14 54 16" src="https://github.com/user-attachments/assets/3d895ac8-fead-4b56-9e45-01fd6f160c31" />
 
+## Cách nhập file CSV:
+
+Vào thư mục `src/csv_sample` để import file csv có sẵn cho từng table cụ 
+
+<img width="248" height="80" alt="Screenshot 2025-07-30 at 15 19 54" src="https://github.com/user-attachments/assets/30f167da-6d3c-4e51-8616-deecf42a288f" />
+
 ## Chức năng chính:
 + Đăng Nhập
 + Đăng Xuất
