@@ -21,14 +21,29 @@ public class MainFrame extends JFrame {
         // Thêm panel cho bảng DanhMuc
         tabbedPane.addTab("Danh mục", new DanhMucPanel());
 
-        // Tạo thanh menu chứa nút "Đăng xuất"
+        // Tạo thanh menu đẹp
         JMenuBar menuBar = new JMenuBar();
-        JMenu heThongMenu = new JMenu("Hệ thống");
-        JMenuItem logoutItem = new JMenuItem("Đăng xuất");
+        JMenu heThongMenu = new JMenu("⚙ Hệ thống");
+        heThongMenu.setFont(new Font("Segoe UI", Font.BOLD, 14));
 
+        JMenuItem logoutItem = new JMenuItem("🔓 Đăng xuất");
+        logoutItem.setFont(new Font("Segoe UI", Font.PLAIN, 13));
+        logoutItem.setBackground(new Color(255, 255, 255));
+
+        // Xác nhận khi đăng xuất
         logoutItem.addActionListener(e -> {
-            dispose(); // Đóng MainFrame
-            new LoginFrame().setVisible(true); // Quay lại màn hình đăng nhập
+            int confirm = JOptionPane.showConfirmDialog(
+                    this,
+                    "Bạn có chắc chắn muốn đăng xuất?",
+                    "Xác nhận đăng xuất",
+                    JOptionPane.YES_NO_OPTION,
+                    JOptionPane.QUESTION_MESSAGE
+            );
+
+            if (confirm == JOptionPane.YES_OPTION) {
+                dispose(); // Đóng MainFrame
+                new LoginFrame().setVisible(true); // Quay lại màn hình đăng nhập
+            }
         });
 
         heThongMenu.add(logoutItem);
