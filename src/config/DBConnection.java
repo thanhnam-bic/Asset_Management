@@ -54,6 +54,12 @@ public class DBConnection {
                     + "cap_nhat_luc DATETIME"
                     + ")";
             stmt.executeUpdate(createDanhMuc);
+            
+            String createUser = "CREATE TABLE IF NOT EXISTS User ("
+                    + "username VARCHAR(150) PRIMARY KEY,"
+                    + "password VARCHAR(150)" // Có thể hash bằng SHA-256 nếu muốn bảo mật
+                    + ")";
+            stmt.executeUpdate(createUser);
 
             // Thêm dữ liệu mẫu cho ViTri
             for (int i = 1; i <= 6; i++) {
@@ -81,6 +87,12 @@ public class DBConnection {
                 if (rs.next() && rs.getInt(1) == 0) {
                     stmt.executeUpdate("INSERT INTO DanhMuc VALUES ('" + danhMuc + "', 'Loại " + i + "', " + (i * 10) + ", NOW(), NOW())");
                 }
+            }
+            
+            // Thêm user mẫu nếu chưa có
+            ResultSet rs = stmt.executeQuery("SELECT COUNT(*) FROM User WHERE username = 'admin'");
+            if (rs.next() && rs.getInt(1) == 0) {
+                stmt.executeUpdate("INSERT INTO User VALUES ('admin', 'admin123')");
             }
 
         } catch (SQLException e) {

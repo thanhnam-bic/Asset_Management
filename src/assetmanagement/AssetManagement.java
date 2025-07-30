@@ -3,7 +3,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Main.java to edit this template
  */
 package assetmanagement;
-import view.MainFrame;
+import view.LoginFrame;
 
 /**
  *
@@ -16,7 +16,7 @@ public class AssetManagement
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        javax.swing.SwingUtilities.invokeLater(() -> new MainFrame().setVisible(true));
+        javax.swing.SwingUtilities.invokeLater(() -> new LoginFrame().setVisible(true));
     }
     
 }
