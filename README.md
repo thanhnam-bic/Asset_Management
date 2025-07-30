@@ -1,12 +1,10 @@
-# Asset_Management
-
 ## How to run project
 
 run file `AssetManagement.java`
 
 Sau khi chạy xong sẽ hiện màn hình login:
 
-<img width="401" height="251" alt="Screenshot 2025-07-30 at 08 42 05" src="https://github.com/user-attachments/assets/6d215cda-deee-428f-850d-0c23d49f3dd1" />
+<img width="420" height="260" alt="Screenshot 2025-07-30 at 14 53 25" src="https://github.com/user-attachments/assets/7002b542-01cd-44ed-a66c-c0beb36f929b" />
 
 Đăng nhập:
 
@@ -16,12 +14,20 @@ Mật Khẩu: `admin123`
 
 Sau đó sẽ vào được những table quản lý tài sản
 
-<img width="900" height="599" alt="Screenshot 2025-07-30 at 09 06 56" src="https://github.com/user-attachments/assets/9f1abec6-570b-4926-a47b-6b573154f1ee" />
+<img width="899" height="601" alt="Screenshot 2025-07-30 at 14 34 00" src="https://github.com/user-attachments/assets/ef729f71-1cb1-4b71-94aa-00cbe682626e" />
 
 Đăng xuất:
 
-<img width="902" height="601" alt="Screenshot 2025-07-30 at 09 07 08" src="https://github.com/user-attachments/assets/248df9de-d70e-4834-ae6f-66d301dd12d3" />
+<img width="901" height="602" alt="Screenshot 2025-07-30 at 14 54 16" src="https://github.com/user-attachments/assets/3d895ac8-fead-4b56-9e45-01fd6f160c31" />
 
+## Chức năng chính:
+
++ Thêm
++ Sửa
++ Xoá
++ Lọc
++ Nhập CSV
++ Xuất CSV
 
 ## Link DB Diagram
 
