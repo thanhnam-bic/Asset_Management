@@ -14,7 +14,7 @@ Mật Khẩu: `admin123`
 
 Sau đó sẽ vào được những table quản lý tài sản
 
-<img width="899" height="601" alt="Screenshot 2025-07-30 at 14 34 00" src="https://github.com/user-attachments/assets/ef729f71-1cb1-4b71-94aa-00cbe682626e" />
+<img width="901" height="599" alt="Screenshot 2025-07-30 at 14 57 10" src="https://github.com/user-attachments/assets/935c70f2-98d4-4e80-a1ee-0e520cad3d87" />
 
 Đăng xuất:
 
