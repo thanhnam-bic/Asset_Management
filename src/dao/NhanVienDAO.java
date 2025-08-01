@@ -100,4 +100,19 @@ public class NhanVienDAO {
             e.printStackTrace();
         }
     }
+    
+    
+    public Vector<String> loadAllViTri() {
+        Vector<String> viTriList = new Vector<>();
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement stmt = conn.prepareStatement("SELECT vi_tri FROM ViTri");
+             ResultSet rs = stmt.executeQuery()) {
+            while (rs.next()) {
+                viTriList.add(rs.getString("vi_tri"));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return viTriList;
+    }
 }

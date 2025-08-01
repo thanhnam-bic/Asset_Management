@@ -6,11 +6,14 @@ import javax.swing.*;
 import java.awt.*;
 import java.io.*;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableColumn;
+import java.util.Vector;
 
 public class NhanVienPanel extends JPanel {
     private JTable table;
     private DefaultTableModel tableModel;
     private JTextField tfMa, tfTen, tfHo, tfTenDN, tfViTri, tfEmail;
+    private JComboBox<String> cbViTri;
     private JButton btnInsert, btnUpdate, btnDelete, btnFilter, btnExportCSV, btnImportCSV;
     private NhanVienController controller;
 
@@ -23,15 +26,19 @@ public class NhanVienPanel extends JPanel {
     private void initComponents() {
         setLayout(new BorderLayout());
         tableModel = new DefaultTableModel();
-        tableModel.setColumnIdentifiers(new String[]{
-                "Mã NV", "Tên", "Họ", "Tên đăng nhập", "Vị trí", "Email"
-        });
+        tableModel.setColumnIdentifiers(new String[]{"Mã NV", "Tên", "Họ", "Tên đăng nhập", "Vị trí", "Email"});
         table = new JTable(tableModel);
+
+        // === Thêm JComboBox cho cột "Vị trí" trong JTable ===
+        Vector<String> viTriList = controller.loadAllViTri(); // Lấy danh sách vị trí từ DB
+        viTriList.add(0, "-- Không chọn --");
+        JComboBox<String> comboBox = new JComboBox<>(viTriList);
+
         add(new JScrollPane(table), BorderLayout.CENTER);
 
-        JPanel panel = new JPanel(new GridLayout(9, 2));
+        JPanel panel = new JPanel(new GridLayout(10, 2));
         tfMa = new JTextField(); tfTen = new JTextField(); tfHo = new JTextField();
-        tfTenDN = new JTextField(); tfViTri = new JTextField(); tfEmail = new JTextField();
+        tfTenDN = new JTextField(); cbViTri = new JComboBox<>(viTriList); tfEmail = new JTextField();
 
         btnInsert = new JButton("Thêm");
         btnUpdate = new JButton("Cập nhật theo mã nhân viên");
@@ -44,7 +51,7 @@ public class NhanVienPanel extends JPanel {
         panel.add(new JLabel("Tên:")); panel.add(tfTen);
         panel.add(new JLabel("Họ:")); panel.add(tfHo);
         panel.add(new JLabel("Tên đăng nhập:")); panel.add(tfTenDN);
-        panel.add(new JLabel("Vị trí:")); panel.add(tfViTri);
+        panel.add(new JLabel("Vị trí:")); panel.add(cbViTri);
         panel.add(new JLabel("Email:")); panel.add(tfEmail);
         panel.add(btnInsert); panel.add(btnDelete);
         panel.add(btnUpdate); panel.add(btnFilter);
@@ -53,15 +60,35 @@ public class NhanVienPanel extends JPanel {
         add(panel, BorderLayout.SOUTH);
 
         // === Event Listeners ===
-        btnInsert.addActionListener(e -> controller.insertNhanVien(
-                tfMa.getText(), tfTen.getText(), tfHo.getText(),
-                tfTenDN.getText(), tfViTri.getText(), tfEmail.getText()
-        ));
+        btnInsert.addActionListener(e -> {
+            Object selectedViTri = cbViTri.getSelectedItem();
+            if (selectedViTri.equals("-- Không chọn --")) selectedViTri = "";
 
-        btnUpdate.addActionListener(e -> controller.updateNhanVien(
-                tfMa.getText(), tfTen.getText(), tfHo.getText(),
-                tfTenDN.getText(), tfViTri.getText(), tfEmail.getText()
-        ));
+            controller.insertNhanVien(
+                    tfMa.getText(), tfTen.getText(), tfHo.getText(),
+                    tfTenDN.getText(), (String) selectedViTri, tfEmail.getText()
+            );
+        });
+
+        btnUpdate.addActionListener(e -> {
+            Object selectedViTri = cbViTri.getSelectedItem();
+            if (selectedViTri.equals("-- Không chọn --")) selectedViTri = "";
+
+            controller.updateNhanVien(
+                    tfMa.getText(), tfTen.getText(), tfHo.getText(),
+                    tfTenDN.getText(), (String) selectedViTri, tfEmail.getText()
+            );
+        });
+
+        btnFilter.addActionListener(e -> {
+            Object selectedViTri = cbViTri.getSelectedItem();
+            if (selectedViTri.equals("-- Không chọn --")) selectedViTri = "";
+
+            controller.filterNhanVien(
+                    tfMa.getText().trim(), tfTen.getText().trim(),
+                    (String) selectedViTri, tfHo.getText().trim(), tfEmail.getText().trim()
+            );
+        });
 
         btnDelete.addActionListener(e -> {
             int selected = table.getSelectedRow();
@@ -70,10 +97,6 @@ public class NhanVienPanel extends JPanel {
                 controller.deleteNhanVien(ma);
             }
         });
-
-        btnFilter.addActionListener(e -> controller.filterNhanVien(
-                tfMa.getText().trim(), tfTen.getText().trim(), tfViTri.getText().trim(), tfHo.getText().trim(), tfEmail.getText().trim()
-        ));
 
         btnExportCSV.addActionListener(e -> exportCSV());
         btnImportCSV.addActionListener(e -> importCSV());
@@ -85,7 +108,7 @@ public class NhanVienPanel extends JPanel {
                 tfTen.setText(table.getValueAt(row, 1).toString());
                 tfHo.setText(table.getValueAt(row, 2).toString());
                 tfTenDN.setText(table.getValueAt(row, 3).toString());
-                tfViTri.setText(table.getValueAt(row, 4).toString());
+                cbViTri.setSelectedItem(table.getValueAt(row, 4).toString());
                 tfEmail.setText(table.getValueAt(row, 5).toString());
             }
         });

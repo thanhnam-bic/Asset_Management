@@ -3,6 +3,7 @@ package controller;
 import dao.NhanVienDAO;
 import model.NhanVien;
 import view.NhanVienPanel;
+import java.util.Vector;
 
 public class NhanVienController {
     private NhanVienPanel view;
@@ -48,4 +49,9 @@ public class NhanVienController {
             });
         }
     }
+    
+    public Vector<String> loadAllViTri() {
+        return dao.loadAllViTri();
+    }
+    
 }
