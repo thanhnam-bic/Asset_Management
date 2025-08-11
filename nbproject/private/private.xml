@@ -3,6 +3,8 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
+            <file>file:/Users/namle/Desktop/uit/cong%20nghe%20java/AssetManagement/src/csv_sample/danh_muc.csv</file>
+            <file>file:/Users/namle/Desktop/uit/cong%20nghe%20java/AssetManagement/src/csv_sample/nhan_vien.csv</file>
             <file>file:/Users/namle/Desktop/uit/cong%20nghe%20java/AssetManagement/src/model/NhanVien.java</file>
             <file>file:/Users/namle/Desktop/uit/cong%20nghe%20java/AssetManagement/src/dao/ViTriDAO.java</file>
             <file>file:/Users/namle/Desktop/uit/cong%20nghe%20java/AssetManagement/src/dao/NhanVienDAO.java</file>
@@ -14,6 +16,7 @@
             <file>file:/Users/namle/Desktop/uit/cong%20nghe%20java/AssetManagement/src/model/DanhMuc.java</file>
             <file>file:/Users/namle/Desktop/uit/cong%20nghe%20java/AssetManagement/src/view/NhanVienPanel.java</file>
             <file>file:/Users/namle/Desktop/uit/cong%20nghe%20java/AssetManagement/src/dao/DanhMucDAO.java</file>
+            <file>file:/Users/namle/Desktop/uit/cong%20nghe%20java/AssetManagement/src/view/LoginFrame.java</file>
             <file>file:/Users/namle/Desktop/uit/cong%20nghe%20java/AssetManagement/src/view/DanhMucPanel.java</file>
             <file>file:/Users/namle/Desktop/uit/cong%20nghe%20java/AssetManagement/src/controller/NhanVienController.java</file>
             <file>file:/Users/namle/Desktop/uit/cong%20nghe%20java/AssetManagement/src/controller/DanhMucController.java</file>
