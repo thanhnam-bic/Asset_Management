@@ -22,7 +22,7 @@ Sau đó sẽ vào được những table quản lý tài sản
 
 ## Cách nhập file CSV:
 
-Vào thư mục `src/csv_sample` để import file csv có sẵn cho từng table cụ 
+Vào thư mục `src/csv_sample` để import file csv có sẵn cho từng table cụ thể
 
 <img width="248" height="80" alt="Screenshot 2025-07-30 at 15 19 54" src="https://github.com/user-attachments/assets/30f167da-6d3c-4e51-8616-deecf42a288f" />
 
