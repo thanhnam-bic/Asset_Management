@@ -20,7 +20,8 @@ public class MainFrame extends JFrame {
 
         // Thêm panel cho bảng DanhMuc
         tabbedPane.addTab("Danh mục", new DanhMucPanel());
-
+        // Thêm panel cho bảng ViTri
+        tabbedPane.addTab("Nhà Cung Cấp", new NhaCungCapPanel());
         // Tạo thanh menu
         JMenuBar menuBar = new JMenuBar();
         JMenu heThongMenu = new JMenu("⚙ Hệ thống");
