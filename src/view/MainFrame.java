@@ -19,6 +19,9 @@ public class MainFrame extends JFrame {
         tabbedPane.addTab("Nhân viên", new NhanVienPanel());
 
         // Thêm panel cho bảng DanhMuc
+        tabbedPane.addTab("Nhà sản xuất", new NhaSanXuatPanel());
+        
+        // Thêm panel cho bảng DanhMuc
         tabbedPane.addTab("Danh mục", new DanhMucPanel());
 
         // Tạo thanh menu
