@@ -13,7 +13,7 @@ public class TaiSanPanel extends JPanel {
     );
     private final JTable table = new JTable(tableModel);
 
-    // ====== Form fields (bên dưới bảng, “label trái – field phải”) ======
+    // ====== Form ======
     private final JTextField tfMaTaiSan = new JTextField(18);
     private final JTextField tfTenTaiSan = new JTextField(18);
     private final JTextField tfSoSerial = new JTextField(18);
@@ -24,7 +24,7 @@ public class TaiSanPanel extends JPanel {
     private final JTextField tfGiaMua = new JTextField(18);
     private final JComboBox<String> cbTinhTrang = new JComboBox<>(new String[]{"<Tất cả>", "Mới", "Đang sử dụng", "Bảo trì", "Thanh lý"});
 
-    // ====== Buttons (3 hàng × 2 cột, đúng layout ảnh mẫu) ======
+    private final JButton btnLamMoi = new JButton("Làm mới");
     private final JButton btnThem = new JButton("Thêm");
     private final JButton btnXoa = new JButton("Xóa");
     private final JButton btnCapNhat = new JButton("Cập nhật theo mã");
@@ -32,7 +32,6 @@ public class TaiSanPanel extends JPanel {
     private final JButton btnXuatCSV = new JButton("Xuất CSV");
     private final JButton btnNhapCSV = new JButton("Nhập CSV");
 
-    // (nếu muốn có ô từ khóa để lọc nhanh)
     private final JTextField tfKeyword = new JTextField(18);
 
     private TaiSanController controller;
@@ -40,10 +39,8 @@ public class TaiSanPanel extends JPanel {
     public TaiSanPanel() {
         setLayout(new BorderLayout(6, 6));
 
-        // ===== TOP: BẢNG =====
         add(new JScrollPane(table), BorderLayout.CENTER);
 
-        // ===== SOUTH: FORM + BUTTONS =====
         JPanel south = new JPanel(new BorderLayout(6, 6));
 
         // --- FORM:  (giống ảnh mẫu: 1 cột label, 1 cột field; 5 hàng)
@@ -68,8 +65,8 @@ public class TaiSanPanel extends JPanel {
 
         south.add(form, BorderLayout.CENTER);
 
-        // --- BUTTONS: 3 hàng × 2 cột (đúng ảnh)
         JPanel buttons = new JPanel(new GridLayout(3, 2, 6, 6));
+        buttons.add(btnLamMoi);
         buttons.add(btnThem);
         buttons.add(btnXoa);
         buttons.add(btnCapNhat);
@@ -83,10 +80,10 @@ public class TaiSanPanel extends JPanel {
 
         // ===== Controller & events =====
         controller = new TaiSanController(this);
+        controller.loadComboboxes();
         controller.loadTableData();
 
-        // JButton btnReloadCombo = new JButton("Làm mới danh sách");
-        // btnReloadCombo.addActionListener(e -> controller.loadComboboxes());
+        btnLamMoi.addActionListener(e -> controller.clearForm());
         btnThem.addActionListener(e -> controller.insertOrUpdate(false));
         btnCapNhat.addActionListener(e -> controller.insertOrUpdate(true));
         btnXoa.addActionListener(e -> controller.deleteSelected());

@@ -4,6 +4,7 @@ import config.DBConnection;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Vector;
 import model.TaiSan;
 
 public class TaiSanDAO {
@@ -119,30 +120,30 @@ public class TaiSanDAO {
         }
     }
 
-    public List<String> getAllDanhMucIds() {
-        List<String> ids = new ArrayList<>();
+    public Vector<String> loadAllDanhMucCodes() {
+        Vector<String> v = new Vector<>();
         String sql = "SELECT ma_danh_muc FROM DanhMuc ORDER BY ma_danh_muc";
-        try (Connection c = DBConnection.getConnection(); PreparedStatement ps = c.prepareStatement(sql); ResultSet rs = ps.executeQuery()) {
+        try (Connection conn = DBConnection.getConnection(); PreparedStatement ps = conn.prepareStatement(sql); ResultSet rs = ps.executeQuery()) {
             while (rs.next()) {
-                ids.add(rs.getString(1));
+                v.add(rs.getString(1));
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return ids;
+        return v;
     }
 
-    public List<String> getAllNhanVienIds() {
-        List<String> ids = new ArrayList<>();
+    public Vector<String> loadAllNhanVienCodes() {
+        Vector<String> v = new Vector<>();
         String sql = "SELECT ma_nhan_vien FROM NhanVien ORDER BY ma_nhan_vien";
-        try (Connection c = DBConnection.getConnection(); PreparedStatement ps = c.prepareStatement(sql); ResultSet rs = ps.executeQuery()) {
+        try (Connection conn = DBConnection.getConnection(); PreparedStatement ps = conn.prepareStatement(sql); ResultSet rs = ps.executeQuery()) {
             while (rs.next()) {
-                ids.add(rs.getString(1));
+                v.add(rs.getString(1));
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return ids;
+        return v;
     }
 
     private TaiSan mapRow(ResultSet rs) throws SQLException {

@@ -1,12 +1,11 @@
 package controller;
 
 import dao.TaiSanDAO;
-import model.TaiSan;
-import view.TaiSanPanel;
-
+import java.util.List;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
-import java.util.List;
+import model.TaiSan;
+import view.TaiSanPanel;
 
 public class TaiSanController {
 
@@ -23,6 +22,24 @@ public class TaiSanController {
     public void loadTableData() {
         List<TaiSan> list = dao.findAll();
         fillTable(list);
+    }
+
+    public void loadComboboxes() {
+        var dm = new javax.swing.DefaultComboBoxModel<String>();
+        dm.addElement("<Tất cả>");
+        for (String code : dao.loadAllDanhMucCodes()) {
+            dm.addElement(code);
+        }
+        view.getCbDanhMuc().setModel(dm);
+        view.getCbDanhMuc().setSelectedIndex(0);
+
+        var nv = new javax.swing.DefaultComboBoxModel<String>();
+        nv.addElement("<Tất cả>");
+        for (String code : dao.loadAllNhanVienCodes()) {
+            nv.addElement(code);
+        }
+        view.getCbMaNhanVien().setModel(nv);
+        view.getCbMaNhanVien().setSelectedIndex(0);
     }
 
     public void filter() {
@@ -117,17 +134,25 @@ public class TaiSanController {
         return new TaiSan(ma, ten, ser, dm, nv, nsx, ncc, gia, tt);
     }
 
-    private void clearForm() {
+    public void clearForm() {
         view.getTfMaTaiSan().setText("");
         view.getTfTenTaiSan().setText("");
         view.getTfSoSerial().setText("");
-        view.getCbDanhMuc().setSelectedIndex(0);
-        view.getCbMaNhanVien().setSelectedIndex(0);
         view.getTfNhaSanXuat().setText("");
         view.getTfNhaCungCap().setText("");
         view.getTfGiaMua().setText("");
-        view.getCbTinhTrang().setSelectedIndex(0);
         view.getTfKeyword().setText("");
+
+        if (view.getCbDanhMuc().getItemCount() > 0) {
+            view.getCbDanhMuc().setSelectedIndex(0);
+        }
+        if (view.getCbMaNhanVien().getItemCount() > 0) {
+            view.getCbMaNhanVien().setSelectedIndex(0);
+        }
+        if (view.getCbTinhTrang().getItemCount() > 0) {
+            view.getCbTinhTrang().setSelectedIndex(0);
+        }
+
         view.getTable().clearSelection();
     }
 
