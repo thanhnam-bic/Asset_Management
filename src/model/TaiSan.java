@@ -1,22 +1,23 @@
 package model;
 
 public class TaiSan {
+
     private String maTaiSan;
     private String tenTaiSan;
     private String soSerial;
-    private String danhMuc;
-    private String maNhanVien;
+    private String danhMuc;     // mã danh mục (String) - giữ thống nhất với repo
+    private String maNhanVien;  // mã nhân viên được gán
     private String nhaSanXuat;
     private String nhaCungCap;
     private double giaMua;
-    private String tinhTrang;
+    private String tinhTrang;   // VD: "Mới", "Đang dùng", "Hỏng", ...
 
     public TaiSan() {
     }
 
     public TaiSan(String maTaiSan, String tenTaiSan, String soSerial, String danhMuc,
-                  String maNhanVien, String nhaSanXuat, String nhaCungCap,
-                  double giaMua, String tinhTrang) {
+            String maNhanVien, String nhaSanXuat, String nhaCungCap,
+            double giaMua, String tinhTrang) {
         this.maTaiSan = maTaiSan;
         this.tenTaiSan = tenTaiSan;
         this.soSerial = soSerial;
