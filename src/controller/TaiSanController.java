@@ -25,14 +25,6 @@ public class TaiSanController {
     }
 
     public void loadComboboxes() {
-        var dm = new javax.swing.DefaultComboBoxModel<String>();
-        dm.addElement("<Tất cả>");
-        for (String code : dao.loadAllDanhMucCodes()) {
-            dm.addElement(code);
-        }
-        view.getCbDanhMuc().setModel(dm);
-        view.getCbDanhMuc().setSelectedIndex(0);
-
         var nv = new javax.swing.DefaultComboBoxModel<String>();
         nv.addElement("<Tất cả>");
         for (String code : dao.loadAllNhanVienCodes()) {
@@ -43,22 +35,22 @@ public class TaiSanController {
     }
 
     public void filter() {
-        String keyword = view.getTfKeyword().getText().trim();
-        String danhMuc = (String) view.getCbDanhMuc().getSelectedItem();
+        String maTS = view.getTfMaTaiSan().getText().trim();
         String maNV = (String) view.getCbMaNhanVien().getSelectedItem();
+        String danhMuc = view.getTfDanhMuc().getText().trim();
         String tinhTrang = (String) view.getCbTinhTrang().getSelectedItem();
 
-        if ("<Tất cả>".equalsIgnoreCase(danhMuc)) {
-            danhMuc = null;
-        }
-        if ("<Tất cả>".equalsIgnoreCase(maNV)) {
+        if (maNV != null && maNV.equalsIgnoreCase("<Tất cả>")) {
             maNV = null;
+        }
+        if (danhMuc != null && danhMuc.equalsIgnoreCase("<Tất cả>")) {
+            danhMuc = null;
         }
         if ("<Tất cả>".equalsIgnoreCase(tinhTrang)) {
             tinhTrang = null;
         }
 
-        List<TaiSan> list = dao.filter(keyword, danhMuc, maNV, tinhTrang);
+        List<TaiSan> list = dao.filter(maTS, maNV, danhMuc, tinhTrang);
         fillTable(list);
     }
 
@@ -102,7 +94,7 @@ public class TaiSanController {
         view.getTfMaTaiSan().setText((String) tm.getValueAt(row, 0));
         view.getTfTenTaiSan().setText((String) tm.getValueAt(row, 1));
         view.getTfSoSerial().setText((String) tm.getValueAt(row, 2));
-        view.getCbDanhMuc().setSelectedItem((String) tm.getValueAt(row, 3));
+        view.getTfDanhMuc().setText((String) tm.getValueAt(row, 3));
         view.getCbMaNhanVien().setSelectedItem((String) tm.getValueAt(row, 4));
         view.getTfNhaSanXuat().setText((String) tm.getValueAt(row, 5));
         view.getTfNhaCungCap().setText((String) tm.getValueAt(row, 6));
@@ -114,7 +106,7 @@ public class TaiSanController {
         String ma = view.getTfMaTaiSan().getText().trim();
         String ten = view.getTfTenTaiSan().getText().trim();
         String ser = view.getTfSoSerial().getText().trim();
-        String dm = (String) view.getCbDanhMuc().getSelectedItem();
+        String dm = view.getTfDanhMuc().getText().trim();
         String nv = (String) view.getCbMaNhanVien().getSelectedItem();
         String nsx = view.getTfNhaSanXuat().getText().trim();
         String ncc = view.getTfNhaCungCap().getText().trim();
@@ -138,21 +130,13 @@ public class TaiSanController {
         view.getTfMaTaiSan().setText("");
         view.getTfTenTaiSan().setText("");
         view.getTfSoSerial().setText("");
+        view.getTfDanhMuc().setText("");
+        view.getCbMaNhanVien().setSelectedIndex(0);
         view.getTfNhaSanXuat().setText("");
         view.getTfNhaCungCap().setText("");
         view.getTfGiaMua().setText("");
+        view.getCbTinhTrang().setSelectedIndex(0);
         view.getTfKeyword().setText("");
-
-        if (view.getCbDanhMuc().getItemCount() > 0) {
-            view.getCbDanhMuc().setSelectedIndex(0);
-        }
-        if (view.getCbMaNhanVien().getItemCount() > 0) {
-            view.getCbMaNhanVien().setSelectedIndex(0);
-        }
-        if (view.getCbTinhTrang().getItemCount() > 0) {
-            view.getCbTinhTrang().setSelectedIndex(0);
-        }
-
         view.getTable().clearSelection();
     }
 

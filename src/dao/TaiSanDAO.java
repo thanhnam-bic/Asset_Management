@@ -23,48 +23,44 @@ public class TaiSanDAO {
         return list;
     }
 
-    /**
-     * Filter linh hoạt giống pattern các DAO khác trong repo
-     */
-    public List<TaiSan> filter(String keyword, String danhMuc, String maNhanVien, String tinhTrang) {
+    public List<TaiSan> filter(String maTaiSan, String maNhanVien, String danhMuc, String tinhTrang) {
         List<TaiSan> list = new ArrayList<>();
-        StringBuilder sb = new StringBuilder(
+        StringBuilder sql = new StringBuilder(
                 "SELECT ma_tai_san, ten_tai_san, so_serial, danh_muc, ma_nhan_vien, "
-                + "nha_san_xuat, nha_cung_cap, gia_mua, tinh_trang FROM TaiSan WHERE 1=1");
+                + "nha_san_xuat, nha_cung_cap, gia_mua, tinh_trang "
+                + "FROM TaiSan WHERE 1=1"
+        );
 
-        // xây where động
-        if (keyword != null && !keyword.isBlank()) {
-            sb.append(" AND (ma_tai_san LIKE ? OR ten_tai_san LIKE ? OR so_serial LIKE ?)");
-        }
-        if (danhMuc != null && !danhMuc.isBlank()) {
-            sb.append(" AND danh_muc = ?");
+        if (maTaiSan != null && !maTaiSan.isBlank()) {
+            sql.append(" AND ma_tai_san LIKE ?");
         }
         if (maNhanVien != null && !maNhanVien.isBlank()) {
-            sb.append(" AND ma_nhan_vien = ?");
+            sql.append(" AND ma_nhan_vien = ?");
+        }
+        if (danhMuc != null && !danhMuc.isBlank()) {
+            sql.append(" AND danh_muc = ?");
         }
         if (tinhTrang != null && !tinhTrang.isBlank()) {
-            sb.append(" AND tinh_trang = ?");
+            sql.append(" AND tinh_trang = ?");
         }
+        sql.append(" ORDER BY ma_tai_san");
 
-        try (Connection conn = DBConnection.getConnection(); PreparedStatement ps = conn.prepareStatement(sb.toString())) {
+        try (Connection conn = DBConnection.getConnection(); PreparedStatement ps = conn.prepareStatement(sql.toString())) {
 
-            int idx = 1;
-            if (keyword != null && !keyword.isBlank()) {
-                String kw = "%" + keyword.trim() + "%";
-                ps.setString(idx++, kw);
-                ps.setString(idx++, kw);
-                ps.setString(idx++, kw);
-            }
-            if (danhMuc != null && !danhMuc.isBlank()) {
-                ps.setString(idx++, danhMuc.trim());
+            int i = 1;
+            if (maTaiSan != null && !maTaiSan.isBlank()) {
+                ps.setString(i++, "%" + maTaiSan.trim() + "%");
             }
             if (maNhanVien != null && !maNhanVien.isBlank()) {
-                ps.setString(idx++, maNhanVien.trim());
+                ps.setString(i++, maNhanVien.trim());
             }
-            if (tinhTrang != null && !tinhTrang.isBlank()) {
-                ps.setString(idx++, tinhTrang.trim());
+            if (danhMuc != null && !danhMuc.isBlank()) {
+                ps.setString(i++, danhMuc.trim());
             }
 
+            if (tinhTrang != null && !tinhTrang.isBlank()) {
+                ps.setString(i++, tinhTrang.trim());
+            }
             try (ResultSet rs = ps.executeQuery()) {
                 while (rs.next()) {
                     list.add(mapRow(rs));
