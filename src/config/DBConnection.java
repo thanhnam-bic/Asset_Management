@@ -34,6 +34,14 @@ public class DBConnection {
                     + ")";
 
             stmt.executeUpdate(createViTri);
+            
+            String createNhaSanXuat = "CREATE TABLE IF NOT EXISTS NhaSanXuat ("
+                    + "nha_san_xuat VARCHAR(150) PRIMARY KEY,"
+                    + "so_luong INT,"
+                    + "tao_luc DATETIME,"
+                    + "cap_nhat_luc DATETIME"
+                    + ")";
+            stmt.executeUpdate(createNhaSanXuat);
 
             String createNhanVien = "CREATE TABLE IF NOT EXISTS NhanVien ("
                     + "ma_nhan_vien VARCHAR(10) PRIMARY KEY,"
@@ -70,6 +78,13 @@ public class DBConnection {
                             ", 'Địa chỉ " + i + "', 'Thành phố " + i + "', NOW(), NOW())");
                 }
             }
+            // Thêm dữ liệu mẫu cho NhaSanXuat
+            for (int i = 1; i <= 5; i++) {
+                String nhaSanXuat = "NSX" + i;
+                ResultSet rs = stmt.executeQuery("SELECT COUNT(*) FROM NhaSanXuat WHERE nha_san_xuat = '" + nhaSanXuat + "'");
+                if (rs.next() && rs.getInt(1) == 0) {
+                    stmt.executeUpdate("INSERT INTO NhaSanXuat VALUES ('" + nhaSanXuat + "', " + (i * 5) + ", NOW(), NOW())");}
+                }
 
             // Thêm dữ liệu mẫu cho NhanVien
             for (int i = 1; i <= 6; i++) {
