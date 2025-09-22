@@ -6,7 +6,7 @@ public class DBConnection {
     private static final String ROOT_URL = "jdbc:mysql://localhost:3306/";
     private static final String DB_NAME = "AssetManagement";
     private static final String USER = "root";
-    private static final String PASSWORD = ""; 
+    private static final String PASSWORD = "abc@123"; 
     private static final String URL = ROOT_URL + DB_NAME;
 
     static {
@@ -62,6 +62,16 @@ public class DBConnection {
                     + "cap_nhat_luc DATETIME"
                     + ")";
             stmt.executeUpdate(createDanhMuc);
+
+            String createNhaCungCap = "CREATE TABLE IF NOT EXISTS NhaCungCap ("
+                    + "nha_cung_cap VARCHAR(150) PRIMARY KEY,"
+                    + "ten_lien_he VARCHAR(150),"
+                    + "duong_dan VARCHAR(150),"
+                    + "tai_san INT,"
+                    + "tao_luc DATETIME,"
+                    + "cap_nhat_luc DATETIME"
+                    + ")";
+            stmt.executeUpdate(createNhaCungCap);
             
             String createUser = "CREATE TABLE IF NOT EXISTS User ("
                     + "username VARCHAR(150) PRIMARY KEY,"
@@ -101,6 +111,19 @@ public class DBConnection {
                 ResultSet rs = stmt.executeQuery("SELECT COUNT(*) FROM DanhMuc WHERE danh_muc = '" + danhMuc + "'");
                 if (rs.next() && rs.getInt(1) == 0) {
                     stmt.executeUpdate("INSERT INTO DanhMuc VALUES ('" + danhMuc + "', 'Loại " + i + "', " + (i * 10) + ", NOW(), NOW())");
+                }
+            }
+
+            // Thêm dữ liệu mẫu cho NhaCungCap
+            String[] tenNhaCungCap = {"Công ty A", "Công ty B", "Công ty C", "Công ty D", "Công ty E", "Công ty F"};
+            String[] tenLienHe = {"Nguyễn Văn A", "Trần Thị B", "Lê Văn C", "Phạm Thị D", "Hoàng Văn E", "Vũ Thị F"};
+            String[] duongDan = {"www.congtya.com", "www.congtyb.com", "www.congtyc.com", "www.congtyd.com", "www.congtye.com", "www.congtyf.com"};
+            
+            for (int i = 1; i <= 6; i++) {
+                String nhaCungCap = "NCC" + i;
+                ResultSet rs = stmt.executeQuery("SELECT COUNT(*) FROM NhaCungCap WHERE nha_cung_cap = '" + nhaCungCap + "'");
+                if (rs.next() && rs.getInt(1) == 0) {
+                    stmt.executeUpdate("INSERT INTO NhaCungCap VALUES ('" + nhaCungCap + "', '" + tenLienHe[i-1] + "', '" + duongDan[i-1] + "', " + (i * 100) + ", NOW(), NOW())");
                 }
             }
             
