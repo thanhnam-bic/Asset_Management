@@ -144,13 +144,13 @@ public class DBConnection {
             for (int i = 1; i <= 6; i++) {
                 String nhaCungCap = "NCC" + i;
                 ResultSet rs = stmt.executeQuery(
-                    "SELECT COUNT(*) FROM NhaCungCap WHERE nha_cung_cap = '" + nhaCungCap + "'"
+                        "SELECT COUNT(*) FROM NhaCungCap WHERE nha_cung_cap = '" + nhaCungCap + "'"
                 );
                 if (rs.next() && rs.getInt(1) == 0) {
                     stmt.executeUpdate(
-                        "INSERT INTO NhaCungCap (nha_cung_cap, ten_nha_cung_cap, ten_lien_he, duong_dan, ma_tai_san, tao_luc, cap_nhat_luc) " +
-                        "VALUES ('" + nhaCungCap + "', '" + tenNhaCungCap[i - 1] + "', '" + tenLienHe[i - 1] + "', '" + duongDan[i - 1] + 
-                        "', 'TS" + ((i % 6) + 1) + "', NOW(), NOW())"
+                            "INSERT INTO NhaCungCap (nha_cung_cap, ten_nha_cung_cap, ten_lien_he, duong_dan, ma_tai_san, tao_luc, cap_nhat_luc) "
+                            + "VALUES ('" + nhaCungCap + "', '" + tenNhaCungCap[i - 1] + "', '" + tenLienHe[i - 1] + "', '" + duongDan[i - 1]
+                            + "', 'TS" + ((i % 6) + 1) + "', NOW(), NOW())"
                     );
                 }
             }
@@ -192,4 +192,4 @@ public class DBConnection {
     public static Connection getConnection() throws SQLException {
         return DriverManager.getConnection(URL, USER, PASSWORD);
     }
-}
+};
