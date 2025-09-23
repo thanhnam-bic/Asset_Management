@@ -35,9 +35,10 @@ public class DBConnection {
 
             String createNhaSanXuat = "CREATE TABLE IF NOT EXISTS NhaSanXuat ("
                     + "nha_san_xuat VARCHAR(150) PRIMARY KEY,"
-                    + "so_luong INT,"
+                    + "ma_tai_san VARCHAR(50),"
                     + "tao_luc DATETIME,"
-                    + "cap_nhat_luc DATETIME"
+                    + "cap_nhat_luc DATETIME,"
+                    + "FOREIGN KEY (ma_tai_san) REFERENCES TaiSan(ma_tai_san)"
                     + ")";
             stmt.executeUpdate(createNhaSanXuat);
 
@@ -108,12 +109,17 @@ public class DBConnection {
             // Thêm dữ liệu mẫu cho NhaSanXuat
             for (int i = 1; i <= 5; i++) {
                 String nhaSanXuat = "NSX" + i;
-                ResultSet rs = stmt.executeQuery("SELECT COUNT(*) FROM NhaSanXuat WHERE nha_san_xuat = '" + nhaSanXuat + "'");
+                String maTaiSan = "TS" + i; 
+                ResultSet rs = stmt.executeQuery(
+                    "SELECT COUNT(*) FROM NhaSanXuat WHERE nha_san_xuat = '" + nhaSanXuat + "'"
+                );
                 if (rs.next() && rs.getInt(1) == 0) {
-                    stmt.executeUpdate("INSERT INTO NhaSanXuat VALUES ('" + nhaSanXuat + "', " + (i * 5) + ", NOW(), NOW())");
+                    stmt.executeUpdate(
+                        "INSERT INTO NhaSanXuat (nha_san_xuat, ma_tai_san, tao_luc, cap_nhat_luc) " +
+                        "VALUES ('" + nhaSanXuat + "', '" + maTaiSan + "', NOW(), NOW())"
+                    );
                 }
             }
-
             // Thêm dữ liệu mẫu cho NhanVien
             for (int i = 1; i <= 6; i++) {
                 String maNV = "NV" + i;

@@ -3,27 +3,47 @@ package model;
 import java.sql.Timestamp;
 
 public class NhaSanXuat {
-    private String nhaSanXuat;
-    private Integer taiSan; // Integer để có thể null
+    private String maNhaSanXuat;   // Mã NSX
+    private String maTaiSan;       // 🔹 Khóa phụ, tham chiếu sang TaiSan
     private Timestamp taoLuc;
     private Timestamp capNhatLuc;
 
-    public NhaSanXuat(String nhaSanXuat, Integer taiSan, Timestamp taoLuc, Timestamp capNhatLuc) {
-        this.nhaSanXuat = nhaSanXuat;
-        this.taiSan = taiSan;
+    public NhaSanXuat(String maNhaSanXuat, String maTaiSan, Timestamp taoLuc, Timestamp capNhatLuc) {
+        this.maNhaSanXuat = maNhaSanXuat;
+        this.maTaiSan = maTaiSan;
         this.taoLuc = taoLuc;
         this.capNhatLuc = capNhatLuc;
     }
 
-    public String getNhaSanXuat() { return nhaSanXuat; }
-    public void setNhaSanXuat(String nhaSanXuat) { this.nhaSanXuat = nhaSanXuat; }
+    public String getMaNhaSanXuat() {
+        return maNhaSanXuat;
+    }
 
-    public Integer getTaiSan() { return taiSan; }
-    public void setTaiSan(Integer taiSan) { this.taiSan = taiSan; }
+    public void setMaNhaSanXuat(String maNhaSanXuat) {
+        this.maNhaSanXuat = maNhaSanXuat;
+    }
 
-    public Timestamp getTaoLuc() { return taoLuc; }
-    public void setTaoLuc(Timestamp taoLuc) { this.taoLuc = taoLuc; }
+    public String getMaTaiSan() {
+        return maTaiSan;
+    }
 
-    public Timestamp getCapNhatLuc() { return capNhatLuc; }
-    public void setCapNhatLuc(Timestamp capNhatLuc) { this.capNhatLuc = capNhatLuc; }
+    public void setMaTaiSan(String maTaiSan) {
+        this.maTaiSan = maTaiSan;
+    }
+
+    public Timestamp getTaoLuc() {
+        return taoLuc;
+    }
+
+    public void setTaoLuc(Timestamp taoLuc) {
+        this.taoLuc = taoLuc;
+    }
+
+    public Timestamp getCapNhatLuc() {
+        return capNhatLuc;
+    }
+
+    public void setCapNhatLuc(Timestamp capNhatLuc) {
+        this.capNhatLuc = capNhatLuc;
+    }
 }

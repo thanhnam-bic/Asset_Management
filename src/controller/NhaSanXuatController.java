@@ -5,7 +5,6 @@ import model.NhaSanXuat;
 import view.NhaSanXuatPanel;
 
 import javax.swing.table.DefaultTableModel;
-import java.sql.Timestamp;
 import java.util.List;
 
 public class NhaSanXuatController {
@@ -21,21 +20,23 @@ public class NhaSanXuatController {
         model.setRowCount(0);
         List<NhaSanXuat> list = dao.findAll();
         for (NhaSanXuat nsx : list) {
-            Object taiSanCell = nsx.getTaiSan() == null ? "" : nsx.getTaiSan();
+            Object taiSanCell = (nsx.getMaTaiSan() == null) ? "" : nsx.getMaTaiSan();
             model.addRow(new Object[]{
-                    nsx.getNhaSanXuat(), taiSanCell,
-                    nsx.getTaoLuc(), nsx.getCapNhatLuc()
+                    nsx.getMaNhaSanXuat(),
+                    taiSanCell,
+                    nsx.getTaoLuc(),
+                    nsx.getCapNhatLuc()
             });
         }
     }
 
-    public void insertNhaSanXuat(String id, Integer taiSan) {
-        dao.insert(new NhaSanXuat(id, taiSan, null, null));
+    public void insertNhaSanXuat(String id, String maTaiSan) {
+        dao.insert(new NhaSanXuat(id, maTaiSan, null, null));
         loadTableData();
     }
 
-    public void updateNhaSanXuat(String id, Integer taiSan) {
-        dao.update(new NhaSanXuat(id, taiSan, null, null));
+    public void updateNhaSanXuat(String id, String maTaiSan) {
+        dao.update(new NhaSanXuat(id, maTaiSan, null, null));
         loadTableData();
     }
 
@@ -44,14 +45,16 @@ public class NhaSanXuatController {
         loadTableData();
     }
 
-    public void filterNhaSanXuat(String nhaSanXuat, String taiSan) {
+    public void filterNhaSanXuat(String maNhaSanXuat, String maTaiSan) {
         DefaultTableModel model = view.getTableModel();
         model.setRowCount(0);
-        for (NhaSanXuat nsx : dao.filter(nhaSanXuat, taiSan)) {
-            Object taiSanCell = nsx.getTaiSan() == null ? "" : nsx.getTaiSan();
+        for (NhaSanXuat nsx : dao.filter(maNhaSanXuat, maTaiSan)) {
+            Object taiSanCell = (nsx.getMaTaiSan() == null) ? "" : nsx.getMaTaiSan();
             model.addRow(new Object[]{
-                    nsx.getNhaSanXuat(), taiSanCell,
-                    nsx.getTaoLuc(), nsx.getCapNhatLuc()
+                    nsx.getMaNhaSanXuat(),
+                    taiSanCell,
+                    nsx.getTaoLuc(),
+                    nsx.getCapNhatLuc()
             });
         }
     }

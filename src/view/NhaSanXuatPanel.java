@@ -10,8 +10,8 @@ import java.io.*;
 public class NhaSanXuatPanel extends JPanel {
     private JTable table;
     private DefaultTableModel tableModel;
-    private JTextField tfID, tfTaiSan, tfFilterID, tfFilterTaiSan;
-    private JButton btnInsert, btnUpdate, btnDelete, btnFilter, btnExportCSV, btnImportCSV, btnRefresh;
+    private JTextField tfMaNSX, tfMaTaiSan;
+    private JButton btnInsert, btnUpdate, btnDelete, btnFilter, btnExportCSV, btnImportCSV;
     private NhaSanXuatController controller;
 
     public NhaSanXuatPanel() {
@@ -25,89 +25,79 @@ public class NhaSanXuatPanel extends JPanel {
 
         // ==== Bảng ====
         tableModel = new DefaultTableModel();
-        tableModel.setColumnIdentifiers(new String[]{"Mã NSX", "Tài Sản", "Tạo lúc", "Cập nhật lúc"});
+        tableModel.setColumnIdentifiers(new String[]{"Mã NSX", "Mã Tài Sản", "Tạo lúc", "Cập nhật lúc"});
         table = new JTable(tableModel);
         add(new JScrollPane(table), BorderLayout.CENTER);
 
         // ==== Panel nhập liệu & nút ====
-        JPanel panel = new JPanel(new GridLayout(8, 2, 5, 5));
-        tfID = new JTextField();
-        tfTaiSan = new JTextField();
-        tfFilterID = new JTextField();
-        tfFilterTaiSan = new JTextField();
+        JPanel panel = new JPanel(new GridLayout(6, 2, 5, 5));
+
+        tfMaNSX = new JTextField();
+        tfMaTaiSan = new JTextField();
 
         btnInsert = new JButton("Thêm");
         btnUpdate = new JButton("Cập nhật");
         btnDelete = new JButton("Xoá");
         btnFilter = new JButton("Lọc");
-        btnRefresh = new JButton("Làm mới");
         btnExportCSV = new JButton("Xuất CSV");
         btnImportCSV = new JButton("Nhập CSV");
 
-        panel.add(new JLabel("Mã NSX:")); panel.add(tfID);
-        panel.add(new JLabel("Tài sản:")); panel.add(tfTaiSan);
-        panel.add(btnInsert); panel.add(btnUpdate);
-        panel.add(btnDelete); panel.add(btnRefresh);
+        // ======= Thêm label + field =======
+        panel.add(new JLabel("Mã NSX:"));
+        panel.add(tfMaNSX);
 
-        panel.add(new JLabel("Lọc Mã NSX:")); panel.add(tfFilterID);
-        panel.add(new JLabel("Lọc Tài sản:")); panel.add(tfFilterTaiSan);
-        panel.add(btnFilter); panel.add(new JLabel(""));
-        panel.add(btnExportCSV); panel.add(btnImportCSV);
+        panel.add(new JLabel("Mã Tài sản:"));
+        panel.add(tfMaTaiSan);
+
+        // ======= Thêm nút theo cặp =======
+        panel.add(btnInsert);
+        panel.add(btnDelete);
+
+        panel.add(btnUpdate);
+        panel.add(btnFilter);
+
+        panel.add(btnExportCSV);
+        panel.add(btnImportCSV);
 
         add(panel, BorderLayout.SOUTH);
 
         // ==== Event Listeners ====
         btnInsert.addActionListener(e -> {
-            String id = tfID.getText().trim();
-            if (id.isEmpty()) {
+            String maNSX = tfMaNSX.getText().trim();
+            String maTaiSan = tfMaTaiSan.getText().trim();
+            if (maNSX.isEmpty()) {
                 JOptionPane.showMessageDialog(this, "Mã NSX không được để trống");
                 return;
             }
-            try {
-                String txt = tfTaiSan.getText().trim();
-                Integer taiSan = txt.isEmpty() ? null : Integer.parseInt(txt);
-                controller.insertNhaSanXuat(id, taiSan);
-                clearForm();
-            } catch (NumberFormatException ex) {
-                JOptionPane.showMessageDialog(this, "Tài sản phải là số hoặc để trống");
-            }
+            controller.insertNhaSanXuat(maNSX, maTaiSan.isEmpty() ? null : maTaiSan);
+            clearForm();
         });
 
         btnUpdate.addActionListener(e -> {
-            String id = tfID.getText().trim();
-            if (id.isEmpty()) {
+            String maNSX = tfMaNSX.getText().trim();
+            String maTaiSan = tfMaTaiSan.getText().trim();
+            if (maNSX.isEmpty()) {
                 JOptionPane.showMessageDialog(this, "Chọn một bản ghi để cập nhật");
                 return;
             }
-            try {
-                String txt = tfTaiSan.getText().trim();
-                Integer taiSan = txt.isEmpty() ? null : Integer.parseInt(txt);
-                controller.updateNhaSanXuat(id, taiSan);
-                clearForm();
-            } catch (NumberFormatException ex) {
-                JOptionPane.showMessageDialog(this, "Tài sản phải là số hoặc để trống");
-            }
+            controller.updateNhaSanXuat(maNSX, maTaiSan.isEmpty() ? null : maTaiSan);
+            clearForm();
         });
 
         btnDelete.addActionListener(e -> {
             int selected = table.getSelectedRow();
             if (selected >= 0) {
-                String id = table.getValueAt(selected, 0).toString();
-                controller.deleteNhaSanXuat(id);
+                String maNSX = table.getValueAt(selected, 0).toString();
+                controller.deleteNhaSanXuat(maNSX);
                 clearForm();
             }
         });
 
         btnFilter.addActionListener(e -> {
             controller.filterNhaSanXuat(
-                    tfFilterID.getText().trim(),
-                    tfFilterTaiSan.getText().trim()
+                    tfMaNSX.getText().trim(),
+                    tfMaTaiSan.getText().trim()
             );
-        });
-
-        btnRefresh.addActionListener(e -> {
-            controller.loadTableData();
-            clearForm();
         });
 
         btnExportCSV.addActionListener(e -> exportCSV());
@@ -117,16 +107,16 @@ public class NhaSanXuatPanel extends JPanel {
         table.getSelectionModel().addListSelectionListener(e -> {
             int row = table.getSelectedRow();
             if (row >= 0) {
-                tfID.setText(table.getValueAt(row, 0).toString());
+                tfMaNSX.setText(table.getValueAt(row, 0).toString());
                 Object val = table.getValueAt(row, 1);
-                tfTaiSan.setText(val == null ? "" : val.toString());
+                tfMaTaiSan.setText(val == null ? "" : val.toString());
             }
         });
     }
 
     private void clearForm() {
-        tfID.setText("");
-        tfTaiSan.setText("");
+        tfMaNSX.setText("");
+        tfMaTaiSan.setText("");
         table.clearSelection();
     }
 
@@ -163,10 +153,9 @@ public class NhaSanXuatPanel extends JPanel {
                 while ((line = reader.readLine()) != null) {
                     String[] parts = line.split(",");
                     if (parts.length >= 2) {
-                        String id = parts[0].trim();
-                        String taiSanStr = parts[1].trim();
-                        Integer taiSan = taiSanStr.isEmpty() ? null : Integer.parseInt(taiSanStr);
-                        controller.insertNhaSanXuat(id, taiSan);
+                        String maNSX = parts[0].trim();
+                        String maTaiSan = parts[1].trim();
+                        controller.insertNhaSanXuat(maNSX, maTaiSan.isEmpty() ? null : maTaiSan);
                         count++;
                     }
                 }
