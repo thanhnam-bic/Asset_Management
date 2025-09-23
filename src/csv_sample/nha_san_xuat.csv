@@ -1,6 +1,6 @@
-nha_san_xuat,tai_san
-NSX1,5
-NSX2,10
-NSX3,15
-NSX4,20
-NSX5,25
+Mã NSX,Tên NSX,Quốc gia,Website,Số điện thoại,Email,Địa chỉ
+NSX1,Công ty Sách Trẻ,Vietnam,https://sachtre.vn,0123456789,contact@sachtre.vn,123 Nguyễn Thị Minh Khai Q.1 TP.HCM
+NSX2,NXB Kim Đồng,Vietnam,https://kimdong.vn,0987654321,info@kimdong.vn,55 Quang Trung Q.Gò Vấp TP.HCM
+NSX3,Oxford Press,UK,https://global.oup.com,+44 1234 567890,support@oup.com,Great Clarendon Street Oxford OX2 6DP UK
+NSX4,Pearson Education,USA,https://pearson.com,+1 212 123 4567,help@pearson.com,221 River Street Hoboken NJ 07030 USA
+NSX5,Nhà Xuất Bản Lao Động,Vietnam,https://nxbld.vn,0901234567,hotro@nxbld.vn,175 Giảng Võ Hà Nội

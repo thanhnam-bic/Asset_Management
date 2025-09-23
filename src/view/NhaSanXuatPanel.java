@@ -10,8 +10,8 @@ import java.io.*;
 public class NhaSanXuatPanel extends JPanel {
     private JTable table;
     private DefaultTableModel tableModel;
-    private JTextField tfID, tfTaiSan, tfFilterID, tfFilterTaiSan;
-    private JButton btnInsert, btnUpdate, btnDelete, btnFilter, btnExportCSV, btnImportCSV, btnRefresh;
+    private JTextField tfID, tfTen, tfQuocGia, tfWebsite, tfSoDienThoai, tfEmail, tfDiaChi;
+    private JButton btnInsert, btnUpdate, btnDelete, btnFilter, btnExportCSV, btnImportCSV;
     private NhaSanXuatController controller;
 
     public NhaSanXuatPanel() {
@@ -22,157 +22,149 @@ public class NhaSanXuatPanel extends JPanel {
 
     private void initComponents() {
         setLayout(new BorderLayout());
-
-        // ==== Bảng ====
         tableModel = new DefaultTableModel();
-        tableModel.setColumnIdentifiers(new String[]{"Mã NSX", "Tài Sản", "Tạo lúc", "Cập nhật lúc"});
+        tableModel.setColumnIdentifiers(new String[]{
+            "Mã NSX", "Tên NSX", "Quốc gia", "Website",
+            "Số điện thoại", "Email", "Địa chỉ"
+        });
         table = new JTable(tableModel);
         add(new JScrollPane(table), BorderLayout.CENTER);
 
-        // ==== Panel nhập liệu & nút ====
-        JPanel panel = new JPanel(new GridLayout(8, 2, 5, 5));
+        JPanel panel = new JPanel(new GridLayout(10, 2));
         tfID = new JTextField();
-        tfTaiSan = new JTextField();
-        tfFilterID = new JTextField();
-        tfFilterTaiSan = new JTextField();
+        tfTen = new JTextField();
+        tfQuocGia = new JTextField();
+        tfWebsite = new JTextField();
+        tfSoDienThoai = new JTextField();
+        tfEmail = new JTextField();
+        tfDiaChi = new JTextField();
 
         btnInsert = new JButton("Thêm");
-        btnUpdate = new JButton("Cập nhật");
+        btnUpdate = new JButton("Cập nhật theo mã NSX");
         btnDelete = new JButton("Xoá");
-        btnFilter = new JButton("Lọc");
-        btnRefresh = new JButton("Làm mới");
+        btnFilter = new JButton("Lọc chính xác");
         btnExportCSV = new JButton("Xuất CSV");
         btnImportCSV = new JButton("Nhập CSV");
 
         panel.add(new JLabel("Mã NSX:")); panel.add(tfID);
-        panel.add(new JLabel("Tài sản:")); panel.add(tfTaiSan);
-        panel.add(btnInsert); panel.add(btnUpdate);
-        panel.add(btnDelete); panel.add(btnRefresh);
+        panel.add(new JLabel("Tên NSX:")); panel.add(tfTen);
+        panel.add(new JLabel("Quốc gia:")); panel.add(tfQuocGia);
+        panel.add(new JLabel("Website:")); panel.add(tfWebsite);
+        panel.add(new JLabel("Số điện thoại:")); panel.add(tfSoDienThoai);
+        panel.add(new JLabel("Email:")); panel.add(tfEmail);
+        panel.add(new JLabel("Địa chỉ:")); panel.add(tfDiaChi);
 
-        panel.add(new JLabel("Lọc Mã NSX:")); panel.add(tfFilterID);
-        panel.add(new JLabel("Lọc Tài sản:")); panel.add(tfFilterTaiSan);
-        panel.add(btnFilter); panel.add(new JLabel(""));
+        panel.add(btnInsert); panel.add(btnDelete);
+        panel.add(btnUpdate); panel.add(btnFilter);
         panel.add(btnExportCSV); panel.add(btnImportCSV);
 
         add(panel, BorderLayout.SOUTH);
 
-        // ==== Event Listeners ====
-        btnInsert.addActionListener(e -> {
-            String id = tfID.getText().trim();
-            if (id.isEmpty()) {
-                JOptionPane.showMessageDialog(this, "Mã NSX không được để trống");
-                return;
-            }
-            try {
-                String txt = tfTaiSan.getText().trim();
-                Integer taiSan = txt.isEmpty() ? null : Integer.parseInt(txt);
-                controller.insertNhaSanXuat(id, taiSan);
-                clearForm();
-            } catch (NumberFormatException ex) {
-                JOptionPane.showMessageDialog(this, "Tài sản phải là số hoặc để trống");
-            }
-        });
+        // === Event Listeners ===
+        btnInsert.addActionListener(e -> controller.insertNhaSanXuat(
+                tfID.getText(), tfTen.getText(), tfQuocGia.getText(),
+                tfWebsite.getText(), tfSoDienThoai.getText(),
+                tfEmail.getText(), tfDiaChi.getText()
+        ));
 
-        btnUpdate.addActionListener(e -> {
-            String id = tfID.getText().trim();
-            if (id.isEmpty()) {
-                JOptionPane.showMessageDialog(this, "Chọn một bản ghi để cập nhật");
-                return;
-            }
-            try {
-                String txt = tfTaiSan.getText().trim();
-                Integer taiSan = txt.isEmpty() ? null : Integer.parseInt(txt);
-                controller.updateNhaSanXuat(id, taiSan);
-                clearForm();
-            } catch (NumberFormatException ex) {
-                JOptionPane.showMessageDialog(this, "Tài sản phải là số hoặc để trống");
-            }
-        });
+        btnUpdate.addActionListener(e -> controller.updateNhaSanXuat(
+                tfID.getText(), tfTen.getText(), tfQuocGia.getText(),
+                tfWebsite.getText(), tfSoDienThoai.getText(),
+                tfEmail.getText(), tfDiaChi.getText()
+        ));
+
+        btnFilter.addActionListener(e -> controller.filterNhaSanXuat(
+                tfID.getText().trim(), tfTen.getText().trim()
+        ));
 
         btnDelete.addActionListener(e -> {
             int selected = table.getSelectedRow();
             if (selected >= 0) {
                 String id = table.getValueAt(selected, 0).toString();
                 controller.deleteNhaSanXuat(id);
-                clearForm();
             }
-        });
-
-        btnFilter.addActionListener(e -> {
-            controller.filterNhaSanXuat(
-                    tfFilterID.getText().trim(),
-                    tfFilterTaiSan.getText().trim()
-            );
-        });
-
-        btnRefresh.addActionListener(e -> {
-            controller.loadTableData();
-            clearForm();
         });
 
         btnExportCSV.addActionListener(e -> exportCSV());
         btnImportCSV.addActionListener(e -> importCSV());
 
-        // ==== Khi chọn dòng trên bảng ====
         table.getSelectionModel().addListSelectionListener(e -> {
             int row = table.getSelectedRow();
             if (row >= 0) {
-                tfID.setText(table.getValueAt(row, 0).toString());
-                Object val = table.getValueAt(row, 1);
-                tfTaiSan.setText(val == null ? "" : val.toString());
+                tfID.setText(getValue(row, 0));
+                tfTen.setText(getValue(row, 1));
+                tfQuocGia.setText(getValue(row, 2));
+                tfWebsite.setText(getValue(row, 3));
+                tfSoDienThoai.setText(getValue(row, 4));
+                tfEmail.setText(getValue(row, 5));
+                tfDiaChi.setText(getValue(row, 6));
             }
         });
     }
 
-    private void clearForm() {
-        tfID.setText("");
-        tfTaiSan.setText("");
-        table.clearSelection();
+    private String getValue(int row, int col) {
+        Object val = table.getValueAt(row, col);
+        return val == null ? "" : val.toString();
     }
 
     private void exportCSV() {
-        JFileChooser fileChooser = new JFileChooser();
-        if (fileChooser.showSaveDialog(this) == JFileChooser.APPROVE_OPTION) {
-            try (PrintWriter writer = new PrintWriter(new FileWriter(fileChooser.getSelectedFile()))) {
-                for (int i = 0; i < tableModel.getColumnCount(); i++) {
-                    writer.print(tableModel.getColumnName(i));
-                    if (i < tableModel.getColumnCount() - 1) writer.print(",");
-                }
-                writer.println();
-                for (int i = 0; i < tableModel.getRowCount(); i++) {
-                    for (int j = 0; j < tableModel.getColumnCount(); j++) {
-                        writer.print(tableModel.getValueAt(i, j));
-                        if (j < tableModel.getColumnCount() - 1) writer.print(",");
-                    }
-                    writer.println();
-                }
-                JOptionPane.showMessageDialog(this, "Xuất CSV thành công!");
-            } catch (IOException e) {
-                JOptionPane.showMessageDialog(this, "Lỗi khi xuất CSV: " + e.getMessage());
+    JFileChooser fileChooser = new JFileChooser();
+    if (fileChooser.showSaveDialog(this) == JFileChooser.APPROVE_OPTION) {
+        try (Writer writer = new OutputStreamWriter(
+                new FileOutputStream(fileChooser.getSelectedFile()), "UTF-8")) {
+
+            // Ghi BOM để Excel nhận UTF-8
+            writer.write('\uFEFF');
+
+            // --- Ghi header ---
+            for (int i = 0; i < tableModel.getColumnCount(); i++) {
+                writer.write(tableModel.getColumnName(i));
+                if (i < tableModel.getColumnCount() - 1) writer.write(",");
             }
+            writer.write("\n");
+
+            // --- Ghi dữ liệu ---
+            for (int i = 0; i < tableModel.getRowCount(); i++) {
+                for (int j = 0; j < tableModel.getColumnCount(); j++) {
+                    Object val = tableModel.getValueAt(i, j);
+                    writer.write(val == null ? "" : val.toString());
+                    if (j < tableModel.getColumnCount() - 1) writer.write(",");
+                }
+                writer.write("\n");
+            }
+
+            writer.flush();
+            JOptionPane.showMessageDialog(this, "Xuất CSV thành công (UTF-8)!");
+        } catch (IOException e) {
+            JOptionPane.showMessageDialog(this, "Lỗi khi xuất CSV: " + e.getMessage());
         }
     }
+}
+
 
     private void importCSV() {
         JFileChooser fileChooser = new JFileChooser();
         if (fileChooser.showOpenDialog(this) == JFileChooser.APPROVE_OPTION) {
-            try (BufferedReader reader = new BufferedReader(new FileReader(fileChooser.getSelectedFile()))) {
-                reader.readLine(); // bỏ dòng tiêu đề
+            File selectedFile = fileChooser.getSelectedFile();
+            try (BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(selectedFile), "UTF-8"))
+) {
+                reader.readLine(); // bỏ header
                 int count = 0;
                 String line;
                 while ((line = reader.readLine()) != null) {
                     String[] parts = line.split(",");
-                    if (parts.length >= 2) {
-                        String id = parts[0].trim();
-                        String taiSanStr = parts[1].trim();
-                        Integer taiSan = taiSanStr.isEmpty() ? null : Integer.parseInt(taiSanStr);
-                        controller.insertNhaSanXuat(id, taiSan);
+                    if (parts.length >= 7) {
+                        controller.insertNhaSanXuat(
+                                parts[0].trim(), parts[1].trim(),
+                                parts[2].trim(), parts[3].trim(),
+                                parts[4].trim(), parts[5].trim(), parts[6].trim()
+                        );
                         count++;
                     }
                 }
                 controller.loadTableData();
                 JOptionPane.showMessageDialog(this, "Nhập CSV thành công! Đã thêm " + count + " dòng.");
-            } catch (Exception e) {
+            } catch (IOException e) {
                 JOptionPane.showMessageDialog(this, "Lỗi khi nhập CSV: " + e.getMessage());
             }
         }
@@ -181,4 +173,5 @@ public class NhaSanXuatPanel extends JPanel {
     public DefaultTableModel getTableModel() {
         return tableModel;
     }
+    public void showMessage(String message, String title, int messageType) { JOptionPane.showMessageDialog(this, message, title, messageType); }
 }
