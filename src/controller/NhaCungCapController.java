@@ -3,6 +3,7 @@ package controller;
 import dao.NhaCungCapDAO;
 import model.NhaCungCap;
 import view.NhaCungCapPanel;
+import java.util.Vector;
 
 import javax.swing.*;
 
@@ -22,14 +23,14 @@ public class NhaCungCapController {
                     ncc.getNhaCungCap(), 
                     ncc.getTenLienHe(), 
                     ncc.getDuongDan(),
-                    ncc.getTaiSan(),
+                    ncc.getMaTaiSan(),
                     ncc.getTaoLuc(), 
                     ncc.getCapNhatLuc()
             });
         }
     }
 
-    public void insertNhaCungCap(String id, String tenLienHe, String duongDan, int taiSan) {
+    public void insertNhaCungCap(String id, String tenLienHe, String duongDan, String maTaiSan) {
         try {
             // Kiểm tra trường bắt buộc
             if (id == null || id.trim().isEmpty()) {
@@ -43,9 +44,8 @@ public class NhaCungCapController {
                 return;
             }
 
-            dao.insert(new NhaCungCap(id.trim(), tenLienHe.trim(), duongDan.trim(), taiSan, null, null));
+            dao.insert(new NhaCungCap(id.trim(), tenLienHe.trim(), duongDan.trim(), maTaiSan.trim(), null, null));
             loadTableData();
-            view.clearForm();
             view.showMessage("Thêm nhà cung cấp thành công!", "Thành công", JOptionPane.INFORMATION_MESSAGE);
             
         } catch (Exception e) {
@@ -53,7 +53,7 @@ public class NhaCungCapController {
         }
     }
 
-    public void updateNhaCungCap(String id, String tenLienHe, String duongDan, int taiSan) {
+    public void updateNhaCungCap(String id, String tenLienHe, String duongDan, String maTaiSan) {
         try {
             // Kiểm tra trường bắt buộc
             if (id == null || id.trim().isEmpty()) {
@@ -67,9 +67,8 @@ public class NhaCungCapController {
                 return;
             }
 
-            dao.update(new NhaCungCap(id.trim(), tenLienHe.trim(), duongDan.trim(), taiSan, null, null));
+            dao.update(new NhaCungCap(id.trim(), tenLienHe.trim(), duongDan.trim(), maTaiSan.trim(), null, null));
             loadTableData();
-            view.clearForm();
             view.showMessage("Cập nhật nhà cung cấp thành công!", "Thành công", JOptionPane.INFORMATION_MESSAGE);
             
         } catch (Exception e) {
@@ -82,17 +81,17 @@ public class NhaCungCapController {
         loadTableData();
     }
 
-    public void filterNhaCungCap(String nhaCungCap, String tenLienHe, String duongDan, String taiSan) {
+    public void filterNhaCungCap(String nhaCungCap, String tenLienHe, String duongDan, String maTaiSan) {
         try {
             var model = view.getTableModel();
             model.setRowCount(0);
             
-            for (NhaCungCap ncc : dao.filter(nhaCungCap, tenLienHe, duongDan, taiSan)) {
+            for (NhaCungCap ncc : dao.filter(nhaCungCap, tenLienHe, duongDan, maTaiSan)) {
                 model.addRow(new Object[]{
                         ncc.getNhaCungCap(), 
                         ncc.getTenLienHe(), 
                         ncc.getDuongDan(),
-                        ncc.getTaiSan(),
+                        ncc.getMaTaiSan(),
                         ncc.getTaoLuc(), 
                         ncc.getCapNhatLuc()
                 });
@@ -114,7 +113,6 @@ public class NhaCungCapController {
     // Phương thức bổ sung để reset bộ lọc
     public void resetFilter() {
         loadTableData();
-        view.clearForm();
     }
 
     // Phương thức tìm theo ID
@@ -135,5 +133,8 @@ public class NhaCungCapController {
             view.showMessage("Lỗi khi kiểm tra dữ liệu: " + e.getMessage(), "Lỗi", JOptionPane.ERROR_MESSAGE);
             return false;
         }
+    }
+    public Vector<String> loadAllMaTaiSan(){
+        return dao.loadAllMaTaiSan();
     }
 }
