@@ -17,7 +17,7 @@ import javax.swing.table.TableColumn;
 public class TaiSanPanel extends JPanel {
 
     private final DefaultTableModel tableModel = new DefaultTableModel(
-            new String[]{"Mã TS", "Tên tài sản", "Serial", "Danh mục", "Mã NV", "NSX", "NCC", "Giá mua", "Tình trạng"}, 0
+            new String[]{"Mã Tài Sản", "Tên tài sản", "Serial", "Danh mục", "Mã NV", "NSX", "NCC", "Giá mua", "Tình trạng"}, 0
     );
     private final JTable table = new JTable(tableModel);
 
@@ -59,7 +59,7 @@ public class TaiSanPanel extends JPanel {
         gc.gridx = 0;
 
         int r = 0;
-        addRow(form, gc, r++, new JLabel("Mã TS:"), tfMaTaiSan);
+        addRow(form, gc, r++, new JLabel("Mã Tài Sản:"), tfMaTaiSan);
         addRow(form, gc, r++, new JLabel("Tên tài sản:"), tfTenTaiSan);
         addRow(form, gc, r++, new JLabel("Serial:"), tfSoSerial);
         addRow(form, gc, r++, new JLabel("Giá mua:"), tfGiaMua);

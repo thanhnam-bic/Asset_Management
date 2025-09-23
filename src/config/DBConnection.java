@@ -21,6 +21,8 @@ public class DBConnection {
 
         try (Connection conn = DriverManager.getConnection(URL, USER, PASSWORD); Statement stmt = conn.createStatement()) {
 
+            stmt.executeUpdate("DROP TABLE IF EXISTS NhaCungCap");
+
             // Tạo bảng nếu chưa tồn tại
             String createViTri = "CREATE TABLE IF NOT EXISTS ViTri ("
                     + "vi_tri VARCHAR(150) PRIMARY KEY,"
@@ -67,10 +69,16 @@ public class DBConnection {
                     + "duong_dan VARCHAR(150),"
                     + "ma_tai_san VARCHAR(150),"
                     + "tao_luc DATETIME,"
-                    + "cap_nhat_luc DATETIME"
+                    + "cap_nhat_luc DATETIME,"
                     + "FOREIGN KEY (ma_tai_san) REFERENCES TaiSan(ma_tai_san)"
                     + ")";
             stmt.executeUpdate(createNhaCungCap);
+
+            String createUser = "CREATE TABLE IF NOT EXISTS User ("
+                    + "username VARCHAR(150) PRIMARY KEY,"
+                    + "password VARCHAR(150)" // Có thể hash bằng SHA-256 nếu muốn bảo mật
+                    + ")";
+            stmt.executeUpdate(createUser);
 
             String createTaiSan = "CREATE TABLE IF NOT EXISTS TaiSan ("
                     + "ma_tai_san VARCHAR(10) PRIMARY KEY,"
@@ -89,13 +97,6 @@ public class DBConnection {
                     + ")";
 
             stmt.executeUpdate(createTaiSan);
-
-            String createUser = "CREATE TABLE IF NOT EXISTS User ("
-                    + "username VARCHAR(150) PRIMARY KEY,"
-                    + "password VARCHAR(150)" // Có thể hash bằng SHA-256 nếu muốn bảo mật
-                    + ")";
-            stmt.executeUpdate(createUser);
-
             // Thêm dữ liệu mẫu cho ViTri
             for (int i = 1; i <= 6; i++) {
                 String viTri = "VT" + i;
