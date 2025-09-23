@@ -21,7 +21,7 @@ public class NhaCungCapDAO {
                         rs.getString("nha_cung_cap"),
                         rs.getString("ten_lien_he"),
                         rs.getString("duong_dan"),
-                        rs.getInt("tai_san"),
+                        rs.getString("ma_tai_san"),
                         rs.getTimestamp("tao_luc"),
                         rs.getTimestamp("cap_nhat_luc")
                 ));
@@ -32,7 +32,7 @@ public class NhaCungCapDAO {
         return list;
     }
 
-    public List<NhaCungCap> filter(String nhaCungCap, String tenLienHe, String duongDan, String taiSan) {
+    public List<NhaCungCap> filter(String nhaCungCap, String tenLienHe, String duongDan, String maTaiSan) {
         List<NhaCungCap> list = new ArrayList<>();
         StringBuilder sql = new StringBuilder("SELECT * FROM NhaCungCap WHERE 1=1");
         List<Object> params = new ArrayList<>();
@@ -49,14 +49,9 @@ public class NhaCungCapDAO {
             sql.append(" AND duong_dan LIKE ?");
             params.add("%" + duongDan + "%");
         }
-        if (!taiSan.isEmpty()) {
-            try {
-                int taiSanInt = Integer.parseInt(taiSan);
-                sql.append(" AND tai_san = ?");
-                params.add(taiSanInt);
-            } catch (NumberFormatException e) {
-                // skip invalid number
-            }
+        if (!maTaiSan.isEmpty()) {
+            sql.append(" AND ma_tai_san LIKE ?");
+            params.add("%" + maTaiSan + "%");
         }
 
         try (Connection conn = DBConnection.getConnection();
@@ -72,7 +67,7 @@ public class NhaCungCapDAO {
                             rs.getString("nha_cung_cap"),
                             rs.getString("ten_lien_he"),
                             rs.getString("duong_dan"),
-                            rs.getInt("tai_san"),
+                            rs.getString("ma_tai_san"),
                             rs.getTimestamp("tao_luc"),
                             rs.getTimestamp("cap_nhat_luc")
                     ));
@@ -91,7 +86,7 @@ public class NhaCungCapDAO {
             stmt.setString(1, ncc.getNhaCungCap());
             stmt.setString(2, ncc.getTenLienHe());
             stmt.setString(3, ncc.getDuongDan());
-            stmt.setInt(4, ncc.getTaiSan());
+            stmt.setString(4, ncc.getMaTaiSan());
             stmt.executeUpdate();
         } catch (Exception e) {
             e.printStackTrace();
@@ -104,7 +99,7 @@ public class NhaCungCapDAO {
              PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setString(1, ncc.getTenLienHe());
             stmt.setString(2, ncc.getDuongDan());
-            stmt.setInt(3, ncc.getTaiSan());
+            stmt.setString(3, ncc.getMaTaiSan());
             stmt.setString(4, ncc.getNhaCungCap());
             stmt.executeUpdate();
         } catch (Exception e) {
@@ -135,7 +130,7 @@ public class NhaCungCapDAO {
                             rs.getString("nha_cung_cap"),
                             rs.getString("ten_lien_he"),
                             rs.getString("duong_dan"),
-                            rs.getInt("tai_san"),
+                            rs.getString("ma_tai_san"),
                             rs.getTimestamp("tao_luc"),
                             rs.getTimestamp("cap_nhat_luc")
                     );
@@ -162,5 +157,18 @@ public class NhaCungCapDAO {
             e.printStackTrace();
         }
         return false;
+    }
+    public Vector<String> loadAllMaTaiSan() {
+        Vector<String> TaiSanList = new Vector<>();
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement stmt = conn.prepareStatement("SELECT ma_tai_san FROM TaiSan");
+             ResultSet rs = stmt.executeQuery()) {
+            while (rs.next()) {
+                TaiSanList.add(rs.getString("ma_tai_san"));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return TaiSanList;
     }
 }

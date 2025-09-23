@@ -65,9 +65,10 @@ public class DBConnection {
                     + "nha_cung_cap VARCHAR(150) PRIMARY KEY,"
                     + "ten_lien_he VARCHAR(150),"
                     + "duong_dan VARCHAR(150),"
-                    + "tai_san INT,"
+                    + "ma_tai_san VARCHAR(150),"
                     + "tao_luc DATETIME,"
                     + "cap_nhat_luc DATETIME"
+                    + "FOREIGN KEY (ma_tai_san) REFERENCES TaiSan(ma_tai_san)"
                     + ")";
             stmt.executeUpdate(createNhaCungCap);
 
@@ -140,7 +141,7 @@ public class DBConnection {
                 String nhaCungCap = "NCC" + i;
                 ResultSet rs = stmt.executeQuery("SELECT COUNT(*) FROM NhaCungCap WHERE nha_cung_cap = '" + nhaCungCap + "'");
                 if (rs.next() && rs.getInt(1) == 0) {
-                    stmt.executeUpdate("INSERT INTO NhaCungCap VALUES ('" + nhaCungCap + "', '" + tenLienHe[i - 1] + "', '" + duongDan[i - 1] + "', " + (i * 100) + ", NOW(), NOW())");
+                    stmt.executeUpdate("INSERT INTO NhaCungCap VALUES ('" + nhaCungCap + "', '" + tenLienHe[i - 1] + "', '" + duongDan[i - 1] + "', 'TS" + ((i % 6) + 1) + "', NOW(), NOW())");
                 }
             }
 

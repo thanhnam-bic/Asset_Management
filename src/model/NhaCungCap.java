@@ -6,16 +6,16 @@ public class NhaCungCap {
     private String nhaCungCap;
     private String tenLienHe;
     private String duongDan;
-    private int taiSan;
+    private String maTaiSan;
     private Date taoLuc;
     private Date capNhatLuc;
 
     // Constructor với tất cả tham số
-    public NhaCungCap(String nhaCungCap, String tenLienHe, String duongDan, int taiSan, Date taoLuc, Date capNhatLuc) {
+    public NhaCungCap(String nhaCungCap, String tenLienHe, String duongDan, String maTaiSan, Date taoLuc, Date capNhatLuc) {
         this.nhaCungCap = nhaCungCap;
         this.tenLienHe = tenLienHe;
         this.duongDan = duongDan;
-        this.taiSan = taiSan;
+        this.maTaiSan = maTaiSan;
         this.taoLuc = taoLuc;
         this.capNhatLuc = capNhatLuc;
     }
@@ -49,12 +49,12 @@ public class NhaCungCap {
         this.duongDan = duongDan;
     }
 
-    public int getTaiSan() {
-        return taiSan;
+    public String getMaTaiSan() {
+        return maTaiSan;
     }
 
-    public void setTaiSan(int taiSan) {
-        this.taiSan = taiSan;
+    public void setMaTaiSan(String maTaiSan) {
+        this.maTaiSan = maTaiSan;
     }
 
     public Date getTaoLuc() {
