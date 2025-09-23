@@ -7,7 +7,7 @@ public class DBConnection {
     private static final String ROOT_URL = "jdbc:mysql://localhost:3306/";
     private static final String DB_NAME = "AssetManagement";
     private static final String USER = "root";
-    private static final String PASSWORD = "";
+    private static final String PASSWORD = "abc@123";
     private static final String URL = ROOT_URL + DB_NAME;
 
     static {
@@ -34,12 +34,18 @@ public class DBConnection {
             stmt.executeUpdate(createViTri);
 
             String createNhaSanXuat = "CREATE TABLE IF NOT EXISTS NhaSanXuat ("
-                    + "nha_san_xuat VARCHAR(150) PRIMARY KEY,"
-                    + "so_luong INT,"
-                    + "tao_luc DATETIME,"
-                    + "cap_nhat_luc DATETIME"
+                    + "nha_san_xuat VARCHAR(150) PRIMARY KEY,"  // Mã hoặc tên định danh NSX
+                    + "ten_nsx VARCHAR(200) NOT NULL,"          // Tên đầy đủ của NSX
+                    + "quoc_gia VARCHAR(100),"                  // Quốc gia
+                    + "website VARCHAR(200),"                   // Website
+                    + "so_dien_thoai VARCHAR(20),"              // Số điện thoại
+                    + "email VARCHAR(100),"                     // Email
+                    + "dia_chi VARCHAR(255),"                   // Địa chỉ trụ sở
+                    + "tao_luc DATETIME,"                       // Ngày tạo
+                    + "cap_nhat_luc DATETIME"                   // Ngày cập nhật
                     + ")";
             stmt.executeUpdate(createNhaSanXuat);
+
 
             String createNhanVien = "CREATE TABLE IF NOT EXISTS NhanVien ("
                     + "ma_nhan_vien VARCHAR(10) PRIMARY KEY,"
@@ -105,11 +111,25 @@ public class DBConnection {
             // Thêm dữ liệu mẫu cho NhaSanXuat
             for (int i = 1; i <= 5; i++) {
                 String nhaSanXuat = "NSX" + i;
-                ResultSet rs = stmt.executeQuery("SELECT COUNT(*) FROM NhaSanXuat WHERE nha_san_xuat = '" + nhaSanXuat + "'");
+                ResultSet rs = stmt.executeQuery(
+                    "SELECT COUNT(*) FROM NhaSanXuat WHERE nha_san_xuat = '" + nhaSanXuat + "'"
+                );
                 if (rs.next() && rs.getInt(1) == 0) {
-                    stmt.executeUpdate("INSERT INTO NhaSanXuat VALUES ('" + nhaSanXuat + "', " + (i * 5) + ", NOW(), NOW())");
+                    String sql = "INSERT INTO NhaSanXuat " +
+                            "(nha_san_xuat, ten_nsx, quoc_gia, website, so_dien_thoai, email, dia_chi, tao_luc, cap_nhat_luc) VALUES (" +
+                            "'" + nhaSanXuat + "', " +
+                            "'Nhà sản xuất " + i + "', " +
+                            "'Việt Nam', " +
+                            "'www.nsx" + i + ".com', " +
+                            "'012345678" + i + "', " +
+                            "'nsx" + i + "@example.com', " +
+                            "'Địa chỉ NSX " + i + "', " +
+                            "NOW(), NOW()" +
+                            ")";
+                    stmt.executeUpdate(sql);
                 }
             }
+
 
             // Thêm dữ liệu mẫu cho NhanVien
             for (int i = 1; i <= 6; i++) {
