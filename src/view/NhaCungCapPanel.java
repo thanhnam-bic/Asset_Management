@@ -25,7 +25,6 @@ public class NhaCungCapPanel extends JPanel {
 
     private void initComponents() {
         setLayout(new BorderLayout());
-
         tableModel = new DefaultTableModel();
         tableModel.setColumnIdentifiers(new String[]{"Mã NCC", "Tên liên hệ", "Đường dẫn", "Mã Tài sản", "Tạo lúc", "Cập nhật lúc"});
         table = new JTable(tableModel);
@@ -53,7 +52,7 @@ public class NhaCungCapPanel extends JPanel {
         panel.add(new JLabel("Mã nhà cung cấp:")); panel.add(tfID);
         panel.add(new JLabel("Tên liên hệ:")); panel.add(tfTenLienHe);
         panel.add(new JLabel("Đường dẫn:")); panel.add(tfDuongDan);
-        panel.add(new JLabel("Tài sản:")); panel.add(cbmaTaiSan);
+        panel.add(new JLabel("Mã Tài sản:")); panel.add(cbmaTaiSan);
         panel.add(btnInsert); panel.add(btnDelete);
         panel.add(btnUpdate); panel.add(btnFilter);
         panel.add(btnExportCSV); panel.add(btnImportCSV);
@@ -72,7 +71,7 @@ public class NhaCungCapPanel extends JPanel {
              Object selectedmaTaiSan = cbmaTaiSan.getSelectedItem();
             if (selectedmaTaiSan.equals("-- Không chọn --")) selectedmaTaiSan = "";
 
-            controller.insertNhaCungCap(tfID.getText(), tfTenLienHe.getText(), 
+            controller.updateNhaCungCap(tfID.getText(), tfTenLienHe.getText(), 
                                           tfDuongDan.getText(),(String) selectedmaTaiSan);
         });
 
