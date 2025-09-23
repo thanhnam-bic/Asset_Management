@@ -13,7 +13,6 @@ public class NhaCungCapPanel extends JPanel {
     private JTable table;
     private DefaultTableModel tableModel;
     private JTextField tfID, tfTenLienHe, tfDuongDan;
-    private JComboBox<String> cbmaTaiSan;
     private JButton btnInsert, btnUpdate, btnDelete, btnFilter, btnExportCSV, btnImportCSV;
     private NhaCungCapController controller;
 
@@ -26,13 +25,9 @@ public class NhaCungCapPanel extends JPanel {
     private void initComponents() {
         setLayout(new BorderLayout());
         tableModel = new DefaultTableModel();
-        tableModel.setColumnIdentifiers(new String[]{"Mã NCC", "Tên liên hệ", "Đường dẫn", "Mã Tài sản", "Tạo lúc", "Cập nhật lúc"});
+        tableModel.setColumnIdentifiers(new String[]{"Mã NCC", "Tên liên hệ", "Đường dẫn", "Tạo lúc", "Cập nhật lúc"});
         table = new JTable(tableModel);
 
-        // === Thêm JComboBox cho cột "Mã tài sản" trong JTable ===
-        Vector<String> TaiSanList = controller.loadAllMaTaiSan(); // Lấy danh sách mã tài sản từ DB
-        TaiSanList.add(0, "-- Không chọn --");
-        JComboBox<String> comboBox = new JComboBox<>(TaiSanList);
 
         add(new JScrollPane(table), BorderLayout.CENTER);
 
@@ -40,7 +35,6 @@ public class NhaCungCapPanel extends JPanel {
         tfID = new JTextField(); 
         tfTenLienHe = new JTextField();
         tfDuongDan = new JTextField(); 
-        cbmaTaiSan = new JComboBox<>(TaiSanList);
 
         btnInsert = new JButton("Thêm");
         btnUpdate = new JButton("Cập nhật theo mã");
@@ -52,7 +46,6 @@ public class NhaCungCapPanel extends JPanel {
         panel.add(new JLabel("Mã nhà cung cấp:")); panel.add(tfID);
         panel.add(new JLabel("Tên liên hệ:")); panel.add(tfTenLienHe);
         panel.add(new JLabel("Đường dẫn:")); panel.add(tfDuongDan);
-        panel.add(new JLabel("Mã Tài sản:")); panel.add(cbmaTaiSan);
         panel.add(btnInsert); panel.add(btnDelete);
         panel.add(btnUpdate); panel.add(btnFilter);
         panel.add(btnExportCSV); panel.add(btnImportCSV);
@@ -60,19 +53,13 @@ public class NhaCungCapPanel extends JPanel {
         add(panel, BorderLayout.SOUTH);
 
         btnInsert.addActionListener(e -> {
-            Object selectedmaTaiSan = cbmaTaiSan.getSelectedItem();
-            if (selectedmaTaiSan.equals("-- Không chọn --")) selectedmaTaiSan = "";
-
             controller.insertNhaCungCap(tfID.getText(), tfTenLienHe.getText(), 
-                                          tfDuongDan.getText(),(String)selectedmaTaiSan);
+                                          tfDuongDan.getText());
         });
 
         btnUpdate.addActionListener(e -> {
-             Object selectedmaTaiSan = cbmaTaiSan.getSelectedItem();
-            if (selectedmaTaiSan.equals("-- Không chọn --")) selectedmaTaiSan = "";
-
             controller.updateNhaCungCap(tfID.getText(), tfTenLienHe.getText(), 
-                                          tfDuongDan.getText(),(String) selectedmaTaiSan);
+                                          tfDuongDan.getText());
         });
 
         btnDelete.addActionListener(e -> {
@@ -84,12 +71,10 @@ public class NhaCungCapPanel extends JPanel {
         });
 
         btnFilter.addActionListener(e -> {
-            Object selectedmaTaiSan = cbmaTaiSan.getSelectedItem();
-            if (selectedmaTaiSan.equals("-- Không chọn --")) selectedmaTaiSan = "";
             controller.filterNhaCungCap(
                 tfID.getText().trim(), 
                 tfTenLienHe.getText().trim(), 
-                tfDuongDan.getText().trim(),(String)selectedmaTaiSan);
+                tfDuongDan.getText().trim());
         });
 
         btnExportCSV.addActionListener(e -> exportCSV());
@@ -101,7 +86,6 @@ public class NhaCungCapPanel extends JPanel {
                 tfID.setText(table.getValueAt(row, 0).toString());
                 tfTenLienHe.setText(table.getValueAt(row, 1).toString());
                 tfDuongDan.setText(table.getValueAt(row, 2).toString());
-                cbmaTaiSan.setSelectedItem(table.getValueAt(row, 3).toString());
             }
         });
     }
@@ -169,9 +153,8 @@ public class NhaCungCapPanel extends JPanel {
                             String id = parts[0].trim().replaceAll("\"", "");
                             String tenLienHe = parts[1].trim().replaceAll("\"", "");
                             String duongDan = parts[2].trim().replaceAll("\"", "");
-                            String maTaiSan = parts[3].trim().replaceAll("\"", "");
                             
-                            controller.insertNhaCungCap(id, tenLienHe, duongDan, maTaiSan);
+                            controller.insertNhaCungCap(id, tenLienHe, duongDan);
                             count++;
                         }
                     } catch (NumberFormatException | ArrayIndexOutOfBoundsException ex) {

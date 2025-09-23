@@ -61,6 +61,15 @@ public class DBConnection {
                     + ")";
             stmt.executeUpdate(createDanhMuc);
 
+            String createNhaCungCap = "CREATE TABLE IF NOT EXISTS NhaCungCap ("
+                    + "nha_cung_cap VARCHAR(150) PRIMARY KEY,"
+                    + "ten_lien_he VARCHAR(150),"
+                    + "duong_dan VARCHAR(150),"
+                    + "tao_luc DATETIME,"
+                    + "cap_nhat_luc DATETIME"
+                    + ")";
+            stmt.executeUpdate(createNhaCungCap);
+
             String createTaiSan = "CREATE TABLE IF NOT EXISTS TaiSan ("
                     + "ma_tai_san VARCHAR(10) PRIMARY KEY,"
                     + "ten_tai_san VARCHAR(150),"
@@ -76,23 +85,7 @@ public class DBConnection {
                     + "FOREIGN KEY (nha_san_xuat) REFERENCES NhaSanXuat(nha_san_xuat),"
                     + "FOREIGN KEY (nha_cung_cap) REFERENCES NhaCungCap(nha_cung_cap)"
                     + ")";
-
             stmt.executeUpdate(createTaiSan);
-            try {
-                stmt.executeUpdate("ALTER TABLE NhaCungCap CHANGE COLUMN tai_san ma_tai_san VARCHAR(150)");
-            } catch (SQLException ex) {
-                System.out.println("Cột tai_san đã đổi hoặc không tồn tại, bỏ qua.");
-            }
-            String createNhaCungCap = "CREATE TABLE IF NOT EXISTS NhaCungCap ("
-                    + "nha_cung_cap VARCHAR(150) PRIMARY KEY,"
-                    + "ten_lien_he VARCHAR(150),"
-                    + "duong_dan VARCHAR(150),"
-                    + "ma_tai_san VARCHAR(150),"
-                    + "tao_luc DATETIME,"
-                    + "cap_nhat_luc DATETIME,"
-                    + "FOREIGN KEY (ma_tai_san) REFERENCES TaiSan(ma_tai_san)"
-                    + ")";
-            stmt.executeUpdate(createNhaCungCap);
 
             String createUser = "CREATE TABLE IF NOT EXISTS User ("
                     + "username VARCHAR(150) PRIMARY KEY,"
@@ -148,9 +141,9 @@ public class DBConnection {
                 );
                 if (rs.next() && rs.getInt(1) == 0) {
                     stmt.executeUpdate(
-                            "INSERT INTO NhaCungCap (nha_cung_cap, ten_nha_cung_cap, ten_lien_he, duong_dan, ma_tai_san, tao_luc, cap_nhat_luc) "
-                            + "VALUES ('" + nhaCungCap + "', '" + tenNhaCungCap[i - 1] + "', '" + tenLienHe[i - 1] + "', '" + duongDan[i - 1]
-                            + "', 'TS" + ((i % 6) + 1) + "', NOW(), NOW())"
+                            "INSERT INTO NhaCungCap (nha_cung_cap, ten_lien_he, duong_dan,tao_luc, cap_nhat_luc) "
+                            + "VALUES ('" + nhaCungCap + "', '" + tenLienHe[i - 1] + "', '" + duongDan[i - 1]
+                            + "', NOW(), NOW())"
                     );
                 }
             }
