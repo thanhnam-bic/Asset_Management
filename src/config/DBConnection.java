@@ -21,8 +21,6 @@ public class DBConnection {
 
         try (Connection conn = DriverManager.getConnection(URL, USER, PASSWORD); Statement stmt = conn.createStatement()) {
 
-            stmt.executeUpdate("DROP TABLE IF EXISTS NhaCungCap");
-
             // Tạo bảng nếu chưa tồn tại
             String createViTri = "CREATE TABLE IF NOT EXISTS ViTri ("
                     + "vi_tri VARCHAR(150) PRIMARY KEY,"
@@ -63,23 +61,6 @@ public class DBConnection {
                     + ")";
             stmt.executeUpdate(createDanhMuc);
 
-            String createNhaCungCap = "CREATE TABLE IF NOT EXISTS NhaCungCap ("
-                    + "nha_cung_cap VARCHAR(150) PRIMARY KEY,"
-                    + "ten_lien_he VARCHAR(150),"
-                    + "duong_dan VARCHAR(150),"
-                    + "ma_tai_san VARCHAR(150),"
-                    + "tao_luc DATETIME,"
-                    + "cap_nhat_luc DATETIME,"
-                    + "FOREIGN KEY (ma_tai_san) REFERENCES TaiSan(ma_tai_san)"
-                    + ")";
-            stmt.executeUpdate(createNhaCungCap);
-
-            String createUser = "CREATE TABLE IF NOT EXISTS User ("
-                    + "username VARCHAR(150) PRIMARY KEY,"
-                    + "password VARCHAR(150)" // Có thể hash bằng SHA-256 nếu muốn bảo mật
-                    + ")";
-            stmt.executeUpdate(createUser);
-
             String createTaiSan = "CREATE TABLE IF NOT EXISTS TaiSan ("
                     + "ma_tai_san VARCHAR(10) PRIMARY KEY,"
                     + "ten_tai_san VARCHAR(150),"
@@ -97,6 +78,28 @@ public class DBConnection {
                     + ")";
 
             stmt.executeUpdate(createTaiSan);
+            try {
+                stmt.executeUpdate("ALTER TABLE NhaCungCap CHANGE COLUMN tai_san ma_tai_san VARCHAR(150)");
+            } catch (SQLException ex) {
+                System.out.println("Cột tai_san đã đổi hoặc không tồn tại, bỏ qua.");
+            }
+            String createNhaCungCap = "CREATE TABLE IF NOT EXISTS NhaCungCap ("
+                    + "nha_cung_cap VARCHAR(150) PRIMARY KEY,"
+                    + "ten_lien_he VARCHAR(150),"
+                    + "duong_dan VARCHAR(150),"
+                    + "ma_tai_san VARCHAR(150),"
+                    + "tao_luc DATETIME,"
+                    + "cap_nhat_luc DATETIME,"
+                    + "FOREIGN KEY (ma_tai_san) REFERENCES TaiSan(ma_tai_san)"
+                    + ")";
+            stmt.executeUpdate(createNhaCungCap);
+
+            String createUser = "CREATE TABLE IF NOT EXISTS User ("
+                    + "username VARCHAR(150) PRIMARY KEY,"
+                    + "password VARCHAR(150)" // Có thể hash bằng SHA-256 nếu muốn bảo mật
+                    + ")";
+            stmt.executeUpdate(createUser);
+
             // Thêm dữ liệu mẫu cho ViTri
             for (int i = 1; i <= 6; i++) {
                 String viTri = "VT" + i;
@@ -140,9 +143,15 @@ public class DBConnection {
 
             for (int i = 1; i <= 6; i++) {
                 String nhaCungCap = "NCC" + i;
-                ResultSet rs = stmt.executeQuery("SELECT COUNT(*) FROM NhaCungCap WHERE nha_cung_cap = '" + nhaCungCap + "'");
+                ResultSet rs = stmt.executeQuery(
+                        "SELECT COUNT(*) FROM NhaCungCap WHERE nha_cung_cap = '" + nhaCungCap + "'"
+                );
                 if (rs.next() && rs.getInt(1) == 0) {
-                    stmt.executeUpdate("INSERT INTO NhaCungCap VALUES ('" + nhaCungCap + "', '" + tenLienHe[i - 1] + "', '" + duongDan[i - 1] + "', 'TS" + ((i % 6) + 1) + "', NOW(), NOW())");
+                    stmt.executeUpdate(
+                            "INSERT INTO NhaCungCap (nha_cung_cap, ten_nha_cung_cap, ten_lien_he, duong_dan, ma_tai_san, tao_luc, cap_nhat_luc) "
+                            + "VALUES ('" + nhaCungCap + "', '" + tenNhaCungCap[i - 1] + "', '" + tenLienHe[i - 1] + "', '" + duongDan[i - 1]
+                            + "', 'TS" + ((i % 6) + 1) + "', NOW(), NOW())"
+                    );
                 }
             }
 
@@ -183,4 +192,4 @@ public class DBConnection {
     public static Connection getConnection() throws SQLException {
         return DriverManager.getConnection(URL, USER, PASSWORD);
     }
-}
+};
