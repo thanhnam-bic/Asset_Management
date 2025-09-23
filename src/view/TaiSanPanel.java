@@ -6,8 +6,13 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.GridLayout;
 import java.awt.Insets;
+import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
+import java.util.Locale;
 import javax.swing.*;
+import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableColumn;
 
 public class TaiSanPanel extends JPanel {
 
@@ -96,6 +101,29 @@ public class TaiSanPanel extends JPanel {
 
         controller.loadComboboxes();
         controller.loadTableData();
+        TableColumn priceCol = table.getColumnModel().getColumn(7);
+        DefaultTableCellRenderer currencyRenderer = new DefaultTableCellRenderer() {
+            private final DecimalFormat fmt = new DecimalFormat("#,##0 'VND'",
+                    new DecimalFormatSymbols(Locale.US));
+
+            @Override
+            public void setValue(Object value) {
+                if (value instanceof Number) {
+                    super.setValue(fmt.format(((Number) value).doubleValue()));
+                } else if (value != null) {
+                    try {
+                        double d = Double.parseDouble(value.toString().trim().replace(",", ""));
+                        super.setValue(fmt.format(d));
+                    } catch (NumberFormatException e) {
+                        super.setValue(value);
+                    }
+                } else {
+                    super.setValue("");
+                }
+            }
+        };
+        currencyRenderer.setHorizontalAlignment(SwingConstants.LEFT);
+        priceCol.setCellRenderer(currencyRenderer);
     }
 
     private void addRow(JPanel p, GridBagConstraints gc, int row, JComponent label, JComponent field) {
