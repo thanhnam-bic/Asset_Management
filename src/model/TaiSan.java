@@ -5,12 +5,12 @@ public class TaiSan {
     private String maTaiSan;
     private String tenTaiSan;
     private String soSerial;
-    private String danhMuc;     // mã danh mục (String) - giữ thống nhất với repo
-    private String maNhanVien;  // mã nhân viên được gán
+    private String danhMuc;
+    private String maNhanVien;
     private String nhaSanXuat;
     private String nhaCungCap;
     private double giaMua;
-    private String tinhTrang;   // VD: "Mới", "Đang dùng", "Hỏng", ...
+    private String tinhTrang;
 
     public TaiSan() {
     }

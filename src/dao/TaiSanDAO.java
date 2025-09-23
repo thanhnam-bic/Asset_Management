@@ -23,7 +23,7 @@ public class TaiSanDAO {
         return list;
     }
 
-    public List<TaiSan> filter(String maTaiSan, String maNhanVien, String danhMuc, String tinhTrang) {
+    public List<TaiSan> filter(String maTaiSan, String maNhanVien, String danhMuc, String tinhTrang, String Ncc, String Nsx) {
         List<TaiSan> list = new ArrayList<>();
         StringBuilder sql = new StringBuilder(
                 "SELECT ma_tai_san, ten_tai_san, so_serial, danh_muc, ma_nhan_vien, "
@@ -43,6 +43,12 @@ public class TaiSanDAO {
         if (tinhTrang != null && !tinhTrang.isBlank()) {
             sql.append(" AND tinh_trang = ?");
         }
+        if (Ncc != null && !Ncc.isBlank()) {
+            sql.append(" AND nha_cung_cap = ?");
+        }
+        if (Nsx != null && !Nsx.isBlank()) {
+            sql.append(" AND nha_san_xuat = ?");
+        }
         sql.append(" ORDER BY ma_tai_san");
 
         try (Connection conn = DBConnection.getConnection(); PreparedStatement ps = conn.prepareStatement(sql.toString())) {
@@ -60,6 +66,12 @@ public class TaiSanDAO {
 
             if (tinhTrang != null && !tinhTrang.isBlank()) {
                 ps.setString(i++, tinhTrang.trim());
+            }
+            if (Ncc != null && !Ncc.isBlank()) {
+                ps.setString(i++, Ncc.trim());
+            }
+            if (Nsx != null && !Nsx.isBlank()) {
+                ps.setString(i++, Nsx.trim());
             }
             try (ResultSet rs = ps.executeQuery()) {
                 while (rs.next()) {
@@ -116,9 +128,9 @@ public class TaiSanDAO {
         }
     }
 
-    public Vector<String> loadAllDanhMucCodes() {
+    public Vector<String> getAllNhaCungCap() {
         Vector<String> v = new Vector<>();
-        String sql = "SELECT ma_danh_muc FROM DanhMuc ORDER BY ma_danh_muc";
+        String sql = "SELECT nha_cung_cap FROM NhaCungCap ORDER BY nha_cung_cap";
         try (Connection conn = DBConnection.getConnection(); PreparedStatement ps = conn.prepareStatement(sql); ResultSet rs = ps.executeQuery()) {
             while (rs.next()) {
                 v.add(rs.getString(1));
@@ -129,7 +141,33 @@ public class TaiSanDAO {
         return v;
     }
 
-    public Vector<String> loadAllNhanVienCodes() {
+    public Vector<String> getAllNhaSanXuat() {
+        Vector<String> v = new Vector<>();
+        String sql = "SELECT nha_san_xuat FROM NhaSanXuat ORDER BY nha_san_xuat";
+        try (Connection conn = DBConnection.getConnection(); PreparedStatement ps = conn.prepareStatement(sql); ResultSet rs = ps.executeQuery()) {
+            while (rs.next()) {
+                v.add(rs.getString(1));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return v;
+    }
+
+    public Vector<String> getAllDanhMuc() {
+        Vector<String> v = new Vector<>();
+        String sql = "SELECT danh_muc FROM DanhMuc ORDER BY danh_muc";
+        try (Connection conn = DBConnection.getConnection(); PreparedStatement ps = conn.prepareStatement(sql); ResultSet rs = ps.executeQuery()) {
+            while (rs.next()) {
+                v.add(rs.getString(1));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return v;
+    }
+
+    public Vector<String> getAllNhanVien() {
         Vector<String> v = new Vector<>();
         String sql = "SELECT ma_nhan_vien FROM NhanVien ORDER BY ma_nhan_vien";
         try (Connection conn = DBConnection.getConnection(); PreparedStatement ps = conn.prepareStatement(sql); ResultSet rs = ps.executeQuery()) {

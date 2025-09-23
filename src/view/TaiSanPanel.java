@@ -1,7 +1,11 @@
 package view;
 
 import controller.TaiSanController;
-import java.awt.*;
+import java.awt.BorderLayout;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.GridLayout;
+import java.awt.Insets;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 
@@ -15,12 +19,12 @@ public class TaiSanPanel extends JPanel {
     private final JTextField tfMaTaiSan = new JTextField(18);
     private final JTextField tfTenTaiSan = new JTextField(18);
     private final JTextField tfSoSerial = new JTextField(18);
-    private final JTextField tfDanhMuc = new JTextField(18);
-    private final JComboBox<String> cbMaNhanVien = new JComboBox<>(new String[]{"<Tất cả>"});
-    private final JTextField tfNhaSanXuat = new JTextField(18);
-    private final JTextField tfNhaCungCap = new JTextField(18);
     private final JTextField tfGiaMua = new JTextField(18);
-    private final JComboBox<String> cbTinhTrang = new JComboBox<>(new String[]{"<Tất cả>", "Mới", "Đang sử dụng", "Bảo trì", "Thanh lý"});
+    private final JComboBox<String> cbDanhMuc = new JComboBox<>(new String[]{"-- Không chọn --"});
+    private final JComboBox<String> cbMaNhanVien = new JComboBox<>(new String[]{"-- Không chọn --"});
+    private final JComboBox<String> cbNhaSanXuat = new JComboBox<>(new String[]{"-- Không chọn --"});
+    private final JComboBox<String> cbNhaCungCap = new JComboBox<>(new String[]{"-- Không chọn --"});
+    private final JComboBox<String> cbTinhTrang = new JComboBox<>(new String[]{"-- Không chọn --", "Mới", "Đang sử dụng", "Bảo trì", "Thanh lý"});
 
     private final JButton btnLamMoi = new JButton("Làm mới");
     private final JButton btnThem = new JButton("Thêm");
@@ -32,11 +36,12 @@ public class TaiSanPanel extends JPanel {
 
     private final JTextField tfKeyword = new JTextField(18);
 
-    private TaiSanController controller;
+    private final TaiSanController controller;
 
     public TaiSanPanel() {
-        setLayout(new BorderLayout(6, 6));
+        controller = new TaiSanController(this);
 
+        setLayout(new BorderLayout(6, 6));
         add(new JScrollPane(table), BorderLayout.CENTER);
 
         JPanel south = new JPanel(new BorderLayout(6, 6));
@@ -52,16 +57,16 @@ public class TaiSanPanel extends JPanel {
         addRow(form, gc, r++, new JLabel("Mã TS:"), tfMaTaiSan);
         addRow(form, gc, r++, new JLabel("Tên tài sản:"), tfTenTaiSan);
         addRow(form, gc, r++, new JLabel("Serial:"), tfSoSerial);
-        addRow(form, gc, r++, new JLabel("Danh mục:"), tfDanhMuc);
-        addRow(form, gc, r++, new JLabel("Mã NV:"), cbMaNhanVien);
-        addRow(form, gc, r++, new JLabel("NSX:"), tfNhaSanXuat);
-        addRow(form, gc, r++, new JLabel("NCC:"), tfNhaCungCap);
         addRow(form, gc, r++, new JLabel("Giá mua:"), tfGiaMua);
+        addRow(form, gc, r++, new JLabel("Danh mục:"), cbDanhMuc);
+        addRow(form, gc, r++, new JLabel("Mã NV:"), cbMaNhanVien);
+        addRow(form, gc, r++, new JLabel("NSX:"), cbNhaSanXuat);
+        addRow(form, gc, r++, new JLabel("NCC:"), cbNhaCungCap);
         addRow(form, gc, r++, new JLabel("Tình trạng:"), cbTinhTrang);
 
         south.add(form, BorderLayout.CENTER);
 
-        JPanel buttons = new JPanel(new GridLayout(3, 2, 6, 6));
+        JPanel buttons = new JPanel(new GridLayout(4, 2, 6, 6));
         buttons.add(btnLamMoi);
         buttons.add(btnThem);
         buttons.add(btnXoa);
@@ -69,15 +74,9 @@ public class TaiSanPanel extends JPanel {
         buttons.add(btnLoc);
         buttons.add(btnXuatCSV);
         buttons.add(btnNhapCSV);
-
         south.add(buttons, BorderLayout.SOUTH);
 
         add(south, BorderLayout.SOUTH);
-
-        controller = new TaiSanController(this);
-        controller.loadComboboxes();
-        controller.loadTableData();
-
         btnLamMoi.addActionListener(e -> {
             controller.clearForm();
             controller.loadTableData();
@@ -86,12 +85,17 @@ public class TaiSanPanel extends JPanel {
         btnCapNhat.addActionListener(e -> controller.insertOrUpdate(true));
         btnXoa.addActionListener(e -> controller.deleteSelected());
         btnLoc.addActionListener(e -> controller.filter());
+        btnXuatCSV.addActionListener(e -> controller.xuatCSV());
+        btnNhapCSV.addActionListener(e -> controller.nhapCSV());
 
         table.getSelectionModel().addListSelectionListener(e -> {
             if (!e.getValueIsAdjusting()) {
                 controller.onTableClickFillForm();
             }
         });
+
+        controller.loadComboboxes();
+        controller.loadTableData();
     }
 
     private void addRow(JPanel p, GridBagConstraints gc, int row, JComponent label, JComponent field) {
@@ -124,31 +128,31 @@ public class TaiSanPanel extends JPanel {
         return tfSoSerial;
     }
 
-    public JTextField getTfDanhMuc() {
-        return tfDanhMuc;
+    public JTextField getTfGiaMua() {
+        return tfGiaMua;
+    }
+
+    public JTextField getTfKeyword() {
+        return tfKeyword;
+    }
+
+    public JComboBox<String> getCbDanhMuc() {
+        return cbDanhMuc;
     }
 
     public JComboBox<String> getCbMaNhanVien() {
         return cbMaNhanVien;
     }
 
-    public JTextField getTfNhaSanXuat() {
-        return tfNhaSanXuat;
+    public JComboBox<String> getCbNhaSanXuat() {
+        return cbNhaSanXuat;
     }
 
-    public JTextField getTfNhaCungCap() {
-        return tfNhaCungCap;
-    }
-
-    public JTextField getTfGiaMua() {
-        return tfGiaMua;
+    public JComboBox<String> getCbNhaCungCap() {
+        return cbNhaCungCap;
     }
 
     public JComboBox<String> getCbTinhTrang() {
         return cbTinhTrang;
-    }
-
-    public JTextField getTfKeyword() {
-        return tfKeyword;
     }
 }
