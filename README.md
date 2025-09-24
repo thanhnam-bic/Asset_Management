@@ -38,6 +38,6 @@ Vào thư mục `src/csv_sample` để import file csv có sẵn cho từng tabl
 
 ## Link DB Diagram
 
-<img width="1021" height="671" alt="Screenshot 2025-09-23 at 20 58 56" src="https://github.com/user-attachments/assets/dc65d531-4655-4f7f-82ac-819ee798a5a0" />
+<img width="1032" height="683" alt="Screenshot 2025-09-24 at 08 44 19" src="https://github.com/user-attachments/assets/f55d16e9-b21b-41e0-a3dd-81f0fe0c0d67" />
 
 link `https://dbdiagram.io/d/Copy-of-Untitled-Diagram-6841150076955641c2bc355e`
