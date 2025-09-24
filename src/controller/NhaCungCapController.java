@@ -76,9 +76,52 @@ public class NhaCungCapController {
     }
 
     public void deleteNhaCungCap(String id) {
-        dao.delete(id);
-        loadTableData();
+        try {
+            // Kiểm tra trường bắt buộc
+            if (id == null || id.trim().isEmpty()) {
+                view.showMessage("Mã nhà cung cấp không được để trống!", "Lỗi", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+
+            // Kiểm tra nhà cung cấp có tồn tại hay không
+            if (!dao.exists(id.trim())) {
+                view.showMessage("Không tìm thấy nhà cung cấp với mã: " + id, "Lỗi", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+
+            // Kiểm tra xem nhà cung cấp có đang được sử dụng trong bảng TaiSan hay không
+            if (dao.isUsedInTaiSan(id.trim())) {
+                // Lấy danh sách tài sản đang sử dụng nhà cung cấp này (tùy chọn)
+                var taiSanList = dao.getTaiSanUsingNhaCungCap(id.trim());
+                String taiSanNames = String.join(", ", taiSanList);
+                
+                String message = "Không thể xóa nhà cung cấp này vì đang có tài sản liên kết!\n" +
+                               "Các tài sản đang sử dụng: " + taiSanNames;
+                
+                view.showMessage(message, "Lỗi", JOptionPane.WARNING_MESSAGE);
+                return;
+            }
+
+            // Hiển thị hộp thoại xác nhận trước khi xóa
+            int confirm = JOptionPane.showConfirmDialog(
+                view, 
+                "Bạn có chắc chắn muốn xóa nhà cung cấp '" + id + "' không?", 
+                "Xác nhận xóa", 
+                JOptionPane.YES_NO_OPTION,
+                JOptionPane.QUESTION_MESSAGE
+            );
+            
+            if (confirm == JOptionPane.YES_OPTION) {
+                dao.delete(id.trim());
+                loadTableData();
+                view.showMessage("Xóa nhà cung cấp thành công!", "Thành công", JOptionPane.INFORMATION_MESSAGE);
+            }
+            
+        } catch (Exception e) {
+            view.showMessage("Lỗi khi xóa nhà cung cấp: " + e.getMessage(), "Lỗi", JOptionPane.ERROR_MESSAGE);
+        }
     }
+
 
     public void filterNhaCungCap(String nhaCungCap, String tenLienHe, String duongDan) {
         try {

@@ -5,6 +5,12 @@ import model.NhaCungCap;
 
 import java.sql.*;
 import java.util.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class NhaCungCapDAO {
     
@@ -147,6 +153,58 @@ public class NhaCungCapDAO {
             e.printStackTrace();
         }
         return false;
+    }
+    /**
+     * Kiểm tra xem nhà cung cấp có đang được sử dụng trong bảng TaiSan hay không
+     * @param nhaCungCapId mã nhà cung cấp cần kiểm tra
+     * @return true nếu nhà cung cấp đang được sử dụng, false nếu không
+     */
+    public boolean isUsedInTaiSan(String nhaCungCapId) {
+        String sql = "SELECT COUNT(*) FROM TaiSan WHERE nha_cung_cap = ?";
+        
+        try (Connection conn = DBConnection.getConnection();
+            PreparedStatement stmt = conn.prepareStatement(sql)) {
+            
+            stmt.setString(1, nhaCungCapId);
+            ResultSet rs = stmt.executeQuery();
+            
+            if (rs.next()) {
+                return rs.getInt(1) > 0; // Trả về true nếu có ít nhất 1 tài sản sử dụng nhà cung cấp này
+            }
+            
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw new RuntimeException("Lỗi khi kiểm tra khóa ngoại: " + e.getMessage());
+        }
+        
+        return false;
+    }
+
+    /**
+     * Phương thức bổ sung: Lấy danh sách tài sản đang sử dụng nhà cung cấp
+     * @param nhaCungCapId mã nhà cung cấp
+     * @return danh sách mã tài sản đang sử dụng nhà cung cấp này
+     */
+    public List<String> getTaiSanUsingNhaCungCap(String nhaCungCapId) {
+        List<String> taiSanList = new ArrayList<>();
+        String sql = "SELECT ma_tai_san FROM TaiSan WHERE nha_cung_cap = ?";
+        
+        try (Connection conn = DBConnection.getConnection();
+            PreparedStatement stmt = conn.prepareStatement(sql)) {
+            
+            stmt.setString(1, nhaCungCapId);
+            ResultSet rs = stmt.executeQuery();
+            
+            while (rs.next()) {
+                taiSanList.add(rs.getString("ma_tai_san"));
+            }
+            
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw new RuntimeException("Lỗi khi lấy danh sách tài sản: " + e.getMessage());
+        }
+        
+        return taiSanList;
     }
  
 }
