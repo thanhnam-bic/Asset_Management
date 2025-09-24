@@ -5,6 +5,12 @@ import model.NhaSanXuat;
 
 import java.sql.*;
 import java.util.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class NhaSanXuatDAO {
 
@@ -172,5 +178,83 @@ public class NhaSanXuatDAO {
         } else {
             stmt.setString(index, value);
         }
+    }
+/**
+ * Kiểm tra xem nhà sản xuất có đang được sử dụng trong bảng TaiSan hay không
+ * @param nhaSanXuatId mã nhà sản xuất cần kiểm tra
+ * @return true nếu nhà sản xuất đang được sử dụng, false nếu không
+ */
+public boolean isUsedInTaiSan(String nhaSanXuatId) {
+    String sql = "SELECT COUNT(*) FROM TaiSan WHERE nha_san_xuat = ?";
+    
+    try (Connection conn = DBConnection.getConnection();
+         PreparedStatement stmt = conn.prepareStatement(sql)) {
+        
+        stmt.setString(1, nhaSanXuatId);
+        ResultSet rs = stmt.executeQuery();
+        
+        if (rs.next()) {
+            return rs.getInt(1) > 0; // Trả về true nếu có ít nhất 1 tài sản sử dụng nhà sản xuất này
+        }
+        
+    } catch (SQLException e) {
+        e.printStackTrace();
+        throw new RuntimeException("Lỗi khi kiểm tra khóa ngoại: " + e.getMessage());
+    }
+    
+    return false;
+}
+
+    /**
+     * Phương thức bổ sung: Lấy danh sách tài sản đang sử dụng nhà sản xuất
+     * @param nhaSanXuatId mã nhà sản xuất
+     * @return danh sách mã tài sản đang sử dụng nhà sản xuất này
+     */
+    public List<String> getTaiSanUsingNhaSanXuat(String nhaSanXuatId) {
+        List<String> taiSanList = new ArrayList<>();
+        String sql = "SELECT ma_tai_san FROM TaiSan WHERE nha_san_xuat = ?";
+        
+        try (Connection conn = DBConnection.getConnection();
+            PreparedStatement stmt = conn.prepareStatement(sql)) {
+            
+            stmt.setString(1, nhaSanXuatId);
+            ResultSet rs = stmt.executeQuery();
+            
+            while (rs.next()) {
+                taiSanList.add(rs.getString("ma_tai_san"));
+            }
+            
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw new RuntimeException("Lỗi khi lấy danh sách tài sản: " + e.getMessage());
+        }
+        
+        return taiSanList;
+    }
+
+    /**
+     * Phương thức bổ sung: Đếm số lượng tài sản đang sử dụng nhà sản xuất
+     * @param nhaSanXuatId mã nhà sản xuất
+     * @return số lượng tài sản đang sử dụng nhà sản xuất này
+     */
+    public int countTaiSanUsingNhaSanXuat(String nhaSanXuatId) {
+        String sql = "SELECT COUNT(*) FROM TaiSan WHERE nha_san_xuat = ?";
+        
+        try (Connection conn = DBConnection.getConnection();
+            PreparedStatement stmt = conn.prepareStatement(sql)) {
+            
+            stmt.setString(1, nhaSanXuatId);
+            ResultSet rs = stmt.executeQuery();
+            
+            if (rs.next()) {
+                return rs.getInt(1);
+            }
+            
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw new RuntimeException("Lỗi khi đếm tài sản: " + e.getMessage());
+        }
+        
+        return 0;
     }
 }

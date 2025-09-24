@@ -81,20 +81,51 @@ public class NhaSanXuatController {
         }
     }
 
-    // Xoá NSX
+// Xoá NSX với kiểm tra khóa ngoại
     public void deleteNhaSanXuat(String id) {
         try {
+            // Kiểm tra trường bắt buộc
             if (id == null || id.trim().isEmpty()) {
                 view.showMessage("Mã nhà sản xuất không được để trống!", "Lỗi", JOptionPane.ERROR_MESSAGE);
                 return;
             }
 
-            dao.delete(id.trim());
-            loadTableData();
-            view.showMessage("Xoá nhà sản xuất thành công!", "Thành công", JOptionPane.INFORMATION_MESSAGE);
+            // Kiểm tra nhà sản xuất có tồn tại hay không
+            if (!dao.exists(id.trim())) {
+                view.showMessage("Không tìm thấy nhà sản xuất với mã: " + id, "Lỗi", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+
+            // Kiểm tra xem nhà sản xuất có đang được sử dụng trong bảng TaiSan hay không
+            if (dao.isUsedInTaiSan(id.trim())) {
+                // Lấy danh sách tài sản đang sử dụng nhà sản xuất này (tùy chọn)
+                var taiSanList = dao.getTaiSanUsingNhaSanXuat(id.trim());
+                String taiSanNames = String.join(", ", taiSanList);
+                
+                String message = "Không thể xóa nhà sản xuất này vì đang có tài sản liên kết!\n" +
+                               "Các tài sản đang sử dụng: " + taiSanNames;
+                
+                view.showMessage(message, "Lỗi", JOptionPane.WARNING_MESSAGE);
+                return;
+            }
+
+            // Hiển thị hộp thoại xác nhận trước khi xóa
+            int confirm = JOptionPane.showConfirmDialog(
+                view, 
+                "Bạn có chắc chắn muốn xóa nhà sản xuất '" + id + "' không?", 
+                "Xác nhận xóa", 
+                JOptionPane.YES_NO_OPTION,
+                JOptionPane.QUESTION_MESSAGE
+            );
+            
+            if (confirm == JOptionPane.YES_OPTION) {
+                dao.delete(id.trim());
+                loadTableData();
+                view.showMessage("Xóa nhà sản xuất thành công!", "Thành công", JOptionPane.INFORMATION_MESSAGE);
+            }
 
         } catch (Exception e) {
-            view.showMessage("Lỗi khi xoá nhà sản xuất: " + e.getMessage(), "Lỗi", JOptionPane.ERROR_MESSAGE);
+            view.showMessage("Lỗi khi xóa nhà sản xuất: " + e.getMessage(), "Lỗi", JOptionPane.ERROR_MESSAGE);
         }
     }
 
