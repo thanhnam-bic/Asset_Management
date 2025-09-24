@@ -1,7 +1,4 @@
 Mã Tài Sản,Tên tài sản,Serial,Danh mục,Mã NV,NSX,NCC,Giá mua,Tình trạng
-TS1,Máy tính xách tay,SERIAL001,DM1,NV1,NSX1,NCC1,1.5E7,Đang sử dụng
-TS2,Máy in laser,SERIAL002,DM2,NV2,NSX2,NCC2,4500000.0,Bảo trì
-TS3,Màn hình LCD,SERIAL003,DM1,NV1,NSX3,NCC3,3000000.0,Hư hỏng
-TS4,Bàn phím cơ,SERIAL004,DM2,NV2,NSX1,NCC2,1200000.0,Đang sử dụng
-TS5,Chuột không dây,SERIAL005,DM1,NV1,NSX2,NCC1,700000.0,Thanh lý
-TS6,Chuột không dây 1,SERIAL005,DM1,NV2,NSX2,NCC1,700000.0,Thanh lý
+TS9,Màn hình LCD,SERIAL003,DM1,NV1,NSX3,NCC3,3000000.0,Hư hỏng
+TS10,Máy tính xách tay,SERIAL001,DM1,NV1,NSX1,NCC1,1.5E7,Đang sử dụng
+TS11,Máy in laser,SERIAL002,DM2,NV2,NSX2,NCC2,4500000.0,Bảo trì
